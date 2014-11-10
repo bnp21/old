@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ExportWeather">
+    <select id="ExportWeather.selectExportWeatherList" parameterType="ExportWeather" resultType="ExportWeather">
+        SELECT
+        A.SEQ               seq
+        ,A.PK_YEAR          pkYear
+        ,A.PK_MONTH         pkMonth
+        ,A.ITEM_CODE        itemCode
+        ,A.ITEM_NAME        itemName
+        ,A.BTOT_AMT         btotAmt
+        ,A.TOT_AMT          totAmt
+        ,A.TOT_AMTPER       totAmtper
+        ,A.CREATEID         createid
+        ,A.CREATEDATE       createdate
+        ,A.UPDATEID         updateid
+        ,A.UPDATEDATE       updatedate
+        ,A.BOOKNUM          booknum
+        ,A.PK_WEEK          pkWeek
+        ,A.VIEW_YN          viewYn
+        ,A.STARTDATE        startdate
+        ,A.ENDDATE          enddate
+        ,A.TITLEDATE        titledate
+        ,A.PUBLISHDATE      publishdate
+        ,(CASE WHEN A.TOT_AMTPER >= 15 THEN '1' WHEN A.TOT_AMTPER >= 5 THEN '2' WHEN A.TOT_AMTPER >= 0 THEN '3' WHEN A.TOT_AMTPER > -5 THEN '4' WHEN A.TOT_AMTPER > -15 THEN '5' ELSE '6' END ) AS totAmtperNum
+        FROM EXPORT_WEATHER A
+        WHERE 1=1
+        AND A.ITEM_CODE IN ('SUB01','SUB02','SUB12','SUB20')
+        <if test="pkYear != null">
+            AND A.PK_YEAR = #{pkYear}
+        </if>
+        <if test="pkMonth != null">
+            AND A.PK_MONTH = #{pkMonth}
+        </if>
+        <if test="pkWeek != null">
+            AND A.PK_WEEK = #{pkWeek}
+        </if>
+        <if test="itemCode != null">
+            AND A.ITEM_CODE = #{itemCode}
+        </if>
+        <if test="viewYn != null">
+            AND A.VIEW_YN = #{viewYn}
+        </if>
+        ORDER BY A.ITEM_CODE ASC
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherWeekDate" parameterType="ExportWeather" resultType="ExportWeather">
+        <![CDATA[
+        SELECT
+            MIN(TO_CHAR(DAYS, 'YY.MM.DD')) startDate
+            , MAX(TO_CHAR(DAYS, 'YY.MM.DD')) endDate
+        FROM (
+            SELECT
+                DAYS
+                ,DENSE_RANK() OVER(ORDER BY WEEK) "RANK"
+            FROM (
+                SELECT
+                    MONTHS + LEVEL -1 "DAYS"
+                , TRUNC(MONTHS + LEVEL -1, 'D') "WEEK"
+                FROM (
+                    SELECT TO_DATE(#{pkMonthDate}, 'YYYYMM') "MONTHS"
+                    FROM DUAL
+                )
+                CONNECT BY MONTHS + LEVEL -1 <= LAST_DAY(MONTHS)
+            )
+        )
+        WHERE RANK=#{pkWeek}
+        GROUP BY RANK
+        ]]>
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherItemUpList" parameterType="ExportWeather" resultType="ExportWeather">
+        <![CDATA[
+        SELECT * FROM
+        (
+            SELECT
+            A.SEQ               seq
+            ,A.PK_MONTH         pkMonth
+            ,A.PK_WEEK          pkWeek
+            ,A.ITEM_CODE        itemCode
+            ,A.ITEM_NAME        itemName
+            ,A.BTOT_AMT         btotAmt
+            ,A.TOT_AMT          totAmt
+            ,A.TOT_AMTPER       totAmtper
+            ,A.CREATEID          createid
+            ,A.CREATEDATE       createdate
+            FROM EXPORT_WEATHER_ITEM A
+            WHERE 1=1
+        ]]>
+            <if test="pkYear != null">
+                AND A.PK_YEAR = #{pkYear}
+            </if>
+            <if test="pkMonth != null">
+                AND A.PK_MONTH = #{pkMonth}
+            </if>
+            <if test="pkWeek != null">
+                AND A.PK_WEEK = #{pkWeek}
+            </if>
+            <if test="itemGroup != null">
+                AND A.ITEM_GROUP = #{itemGroup}
+            </if>
+        <![CDATA[
+            ORDER BY A.TOT_AMT DESC
+        ) B
+        WHERE ROWNUM <= 3
+        ]]>
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherItemDownList" parameterType="ExportWeather" resultType="ExportWeather">
+        <![CDATA[
+        SELECT * FROM
+        (
+            SELECT
+            A.SEQ               seq
+            ,A.PK_MONTH         pkMonth
+            ,A.PK_WEEK          pkWeek
+            ,A.ITEM_CODE        itemCode
+            ,A.ITEM_NAME        itemName
+            ,A.BTOT_AMT         btotAmt
+            ,A.TOT_AMT          totAmt
+            ,A.TOT_AMTPER       totAmtper
+            ,A.CREATEID          createid
+            ,A.CREATEDATE       createdate
+            FROM EXPORT_WEATHER_ITEM A
+            WHERE 1=1
+        ]]>
+        <if test="pkYear != null">
+            AND A.PK_YEAR = #{pkYear}
+        </if>
+        <if test="pkMonth != null">
+            AND A.PK_MONTH = #{pkMonth}
+        </if>
+        <if test="pkWeek != null">
+            AND A.PK_WEEK = #{pkWeek}
+        </if>
+        <if test="itemGroup != null">
+            AND A.ITEM_GROUP = #{itemGroup}
+        </if>
+        <![CDATA[
+            ORDER BY A.TOT_AMT ASC
+        ) B
+        WHERE ROWNUM <= 3
+        ]]>
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherMonthList" parameterType="ExportWeather" resultType="ExportWeather">
+        SELECT
+        A.SEQ               seq
+        ,A.PK_MONTH         pkMonth
+        ,A.PK_WEEK          pkWeek
+        ,ceil(A.CUR_AMT1/100000)         curAmt1       /* 오라클에 올림이 없어 ceil을 이용함 */
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-1),'MM') curAmtDate1
+        ,ceil(A.CUR_AMT2/100000)         curAmt2
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-2),'MM') curAmtDate2
+        ,ceil(A.CUR_AMT3/100000)        curAmt3
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-3),'YY MM') curAmtDate3
+        ,A.ITEM_CODE        itemCode
+        ,A.ITEM_NAME        itemName
+        ,A.CREATEID         createid
+        ,A.CREATEDATE       createdate
+        ,(CASE WHEN (NVL(CUR_AMT1,0) >= NVL(CUR_AMT2,0) AND NVL(CUR_AMT1,0) >= NVL(CUR_AMT3,0)) THEN NVL(ceil(A.CUR_AMT1/100000),0) WHEN (NVL(CUR_AMT2,0) >= NVL(CUR_AMT1,0) AND NVL(CUR_AMT2,0) >= NVL(CUR_AMT3,0)) THEN NVL(ceil(A.CUR_AMT2/100000),0) ELSE NVL(ceil(A.CUR_AMT3/100000),0) END ) maxCurAmt
+        FROM EXPORT_WEATHER_MONTH A
+        WHERE 1=1
+        AND A.ITEM_CODE IN ('SUB02','SUB12','SUB20')
+        <if test="pkYear != null">
+            AND A.PK_YEAR = #{pkYear}
+        </if>
+        <if test="pkMonth != null">
+            AND A.PK_MONTH = #{pkMonth}
+        </if>
+        <if test="pkWeek != null">
+            AND A.PK_WEEK = #{pkWeek}
+        </if>
+        ORDER BY A.SEQ ASC
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherNationList" parameterType="ExportWeather" resultType="ExportWeather">
+        SELECT
+        A.SEQ               seq
+        ,A.PK_MONTH         pkMonth
+        ,A.PK_WEEK          pkWeek
+        ,TRIM(A.ITEM_NAME)        itemName
+        ,B.ITEM_CODE        itemCode
+        ,A.TOT_AMTPER       totAmtper
+        ,A.UP_ITEM          upItem
+        ,A.DOWN_ITEM        downItem
+        ,A.MEMO1            memo1
+        ,A.MEMO2            memo2
+        ,A.CREATEID          createid
+        ,A.CREATEDATE       createdate
+        ,(CASE WHEN A.TOT_AMTPER >= 15 THEN '1' WHEN A.TOT_AMTPER >= 5 THEN '2' WHEN A.TOT_AMTPER >= 0 THEN '3' WHEN A.TOT_AMTPER > -5 THEN '4' WHEN A.TOT_AMTPER > -15 THEN '5' ELSE '6' END ) AS totAmtperNum
+        FROM EXPORT_WEATHER_NATION A INNER JOIN ITEM B ON TRIM(A.ITEM_NAME)=B.NAME AND B.GROUP_CODE='G'
+        WHERE 1=1
+        <if test="pkYear != null">
+            AND A.PK_YEAR = #{pkYear}
+        </if>
+        <if test="pkMonth != null">
+            AND A.PK_MONTH = #{pkMonth}
+        </if>
+        <if test="pkWeek != null">
+            AND A.PK_WEEK = #{pkWeek}
+        </if>
+        ORDER BY A.SEQ ASC
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherTop" resultType="ExportWeather">
+        <![CDATA[
+        SELECT
+            B.PK_YEAR          pkYear
+            ,B.PK_MONTH          pkMonth
+            ,B.PK_WEEK          pkWeek
+        FROM
+        (
+            SELECT
+                A.PK_YEAR, A.PK_MONTH, A.PK_WEEK
+            FROM EXPORT_WEATHER A
+            GROUP BY A.PK_YEAR,A.PK_MONTH, A.PK_WEEK
+            ORDER BY A.PK_YEAR DESC, A.PK_MONTH DESC, A.PK_WEEK DESC
+        ) B
+        WHERE 1=1
+        AND (B.PK_YEAR, B.PK_MONTH, B.PK_WEEK) NOT IN
+            (SELECT A.PK_YEAR, A.PK_MONTH, A.PK_WEEK  FROM EXPORT_WEATHER_NATION A, ITEM B
+              WHERE 1=1
+              AND TRIM(A.ITEM_NAME)=B.NAME
+              AND B.GROUP_CODE='G'
+              AND MEMO2 IS NULL
+              GROUP BY PK_YEAR,PK_MONTH, PK_WEEK
+            )
+        AND ROWNUM = 1
+        ]]>
+    </select>
+
+    <select id="ExportWeather.selectExportWeatherGroupDay" resultType="ExportWeather">
+        <![CDATA[
+        SELECT
+            A.PK_YEAR                   pkYear
+            ,A.PK_MONTH                 pkMonth
+            ,A.PK_WEEK                  pkWeek
+            ,A.BOOKNUM                  booknum
+            ,A.VIEW_YN                  viewYn
+            ,A.CREATEDATE               createdate
+        FROM
+        (
+            SELECT PK_YEAR, PK_MONTH, PK_WEEK, BOOKNUM, VIEW_YN, SUBSTR(CREATEDATE,0,10) CREATEDATE
+            FROM EXPORT_WEATHER
+            GROUP BY PK_YEAR, PK_MONTH, PK_WEEK, BOOKNUM, VIEW_YN, SUBSTR(CREATEDATE,0,10)
+        ) A
+        ORDER BY A.PK_YEAR DESC, A.PK_MONTH DESC, A.PK_WEEK DESC
+        ]]>
+    </select>
+
+    <update id="ExportWeather.updateExportWeather" parameterType="ExportWeather">
+        UPDATE EXPORT_WEATHER
+        SET BOOKNUM=#{booknum}, VIEW_YN=#{viewYn}, STARTDATE=#{startdate}, ENDDATE=#{enddate}, TITLEDATE=#{titledate}, PUBLISHDATE=#{publishdate}, UPDATEID=#{updateid}, UPDATEDATE=to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        WHERE PK_YEAR = #{pkYear} AND PK_MONTH = #{pkMonth} AND PK_WEEK = #{pkWeek}
+    </update>
+
+    <update id="ExportWeather.updateExportWeatherNation" parameterType="ExportWeather">
+        UPDATE EXPORT_WEATHER_NATION
+        SET UP_ITEM=#{upItem}, DOWN_ITEM=#{downItem}, MEMO1=#{memo1}, MEMO2=#{memo2}
+        WHERE PK_YEAR = #{pkYear} AND PK_MONTH = #{pkMonth} AND PK_WEEK = #{pkWeek} AND TRIM(ITEM_NAME) = TRIM(#{itemName})
+    </update>
+</mapper>

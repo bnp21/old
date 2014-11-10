@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DailyPrice">
+
+    <select id="DailyPrice.selectDailyPriceList" parameterType="DailyPrice" resultType="DailyPrice">
+        <![CDATA[
+        SELECT
+            A.PRODUCT_ID    productId
+            ,ROUND(A.AVG_PRICE,0)    avgPrice
+            ,(SELECT ROUND(AVG_PRICE,0) FROM PRODUCT_PRICE WHERE PK_DATE=(SELECT MAX(PK_DATE) FROM PRODUCT_PRICE WHERE PK_DATE<A.PK_DATE) AND PRODUCT_ID=A.PRODUCT_ID) prevAvgPrice
+            ,A.PK_DATE      pkDate
+            ,REPLACE(A.PRODUCT_ID,'H','') itemCode
+            ,B.NAME    itemName
+            ,B.UNIT    unit
+            ,A.VIEW_YN    viewYn
+            ,A.CREATEDATE   createdate
+            ,A.CREATEID     createid
+            ,A.UPDATEDATE   updatedate
+            ,A.UPDATEID     updateid
+        FROM PRODUCT_PRICE A , ITEM B
+        WHERE 1=1
+        AND A.PRODUCT_ID=B.ITEM_CODE
+        AND B.GROUP_CODE='H'
+        ]]>
+        <if test="pkDate != null">
+            AND A.PK_DATE = #{pkDate}
+        </if>
+        <if test="viewYn != null">
+            AND A.VIEW_YN = #{viewYn}
+        </if>
+        <![CDATA[
+        ORDER BY A.PRODUCT_ID
+        ]]>
+    </select>
+
+    <select id="DailyPrice.selectDailyPriceDayList" parameterType="DailyPrice" resultType="DailyPrice">
+        <![CDATA[
+        SELECT
+            A.PK_DATE                    pkDate
+            ,SUBSTR(A.CREATEDATE,0,10)   createdate
+            ,SUBSTR(A.UPDATEID,0,10)     updatedate
+        FROM PRODUCT_PRICE A
+        WHERE 1=1
+        GROUP BY A.PK_DATE, SUBSTR(A.CREATEDATE,0,10), SUBSTR(A.UPDATEID,0,10)
+        ORDER BY A.PK_DATE DESC
+        ]]>
+    </select>
+
+    <select id="DailyPrice.selectDailyPriceTop" parameterType="DailyPrice" resultType="DailyPrice">
+        <![CDATA[
+        SELECT
+            B.PK_DATE          pkDate
+        FROM
+        (
+            SELECT
+                MAX(A.PK_DATE) PK_DATE
+            FROM PRODUCT_PRICE A
+            WHERE 1=1
+            AND VIEW_YN='Y'
+            GROUP BY A.PK_DATE
+            ORDER BY A.PK_DATE DESC
+        ) B
+        WHERE ROWNUM = 1
+        ]]>
+    </select>
+
+    <update id="DailyPrice.updateDailyPrice" parameterType="DailyPrice">
+        UPDATE PRODUCT_PRICE SET VIEW_YN=#{viewYn} WHERE PK_DATE=#{pkDate} AND PRODUCT_ID=#{productId}
+    </update>
+
+    <delete id="DailyPrice.deleteDailyPrice" parameterType="DailyPrice">
+        DELETE FROM PRODUCT_PRICE WHERE PK_DATE=#{pkDate}
+    </delete>
+</mapper>

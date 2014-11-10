@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Education">
+
+    <sql id="Education.selectEducation">
+        <![CDATA[
+        SELECT
+            A.CATE_CODE            cateCode
+            ,A.EDUCATION_CODE       educationCode
+            ,A.EDUCATION_NAME       educationName
+            ,A.COURSE               course
+            ,A.START_DATE           startDate
+            ,A.END_DATE             endDate
+            ,A.GISU                 gisu
+            ,A.PERSONNEL            personnel
+            ,A.PROGRESS             progress
+            ,A.CREATEDATE           createdate
+            ,A.CREATEID             createid
+            ,A.UPDATEDATE           updatedate
+            ,A.UPDATEID             updateid
+        FROM EDUCATION A
+        ]]>
+    </sql>
+
+
+    <select id="Education.selectEducationList"  parameterType="Education" resultType="Education">
+        <include refid="Education.selectEducation" />
+        WHERE 1=1
+        AND A.PK_DATE=(SELECT MAX(PK_DATE) FROM EVENT)
+        AND ROWNUM    <![CDATA[ <    ]]> 6
+        ORDER BY A.PK_DATE DESC, A.START_DATE DESC, A.END_DATE DESC
+    </select>
+</mapper>

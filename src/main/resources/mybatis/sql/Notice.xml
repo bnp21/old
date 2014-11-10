@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Notice">
+
+    <sql id="Notice.selectNotice">
+        SELECT
+        A.SEQ         seq
+        , A.TITLE       title
+        , A.CONTENTS    contents
+        , A.DEL_YN      delYn
+        , A.TOP_YN      topYn
+        , A.VIEWCNT      viewcnt
+        , A.REGDATE     regdate
+        , A.MODDATE     moddate
+        , A.ACCOUNT_ID  accountId
+        , A.FILE_SEQ    fileSeq
+        , B.FILENAME    filename
+        , B.FILE_NO    fileNo
+        , B.FILEMIME   filemime
+        , B.FILESIZE   filesize
+        FROM NOTICE A LEFT JOIN FILEINFO B ON A.FILE_SEQ = B.SEQ AND B.DEL_YN='N'
+    </sql>
+
+
+    <select id="Notice.selectNoticeList"  parameterType="Notice" resultType="Notice">
+        <include refid="Notice.selectNotice" />
+        WHERE 1=1
+        AND A.del_yn='N'
+        ORDER BY A.regdate DESC
+    </select>
+
+    <select id="Notice.selectNoticeCount"  parameterType="Notice" resultType="int">
+        SELECT COUNT(*) FROM NOTICE A LEFT JOIN FILEINFO B ON A.FILE_SEQ = B.SEQ AND B.DEL_YN='N'
+        WHERE 1=1
+        AND A.del_yn='N'
+    </select>
+
+    <select id="Notice.selectNoticePagingList"  parameterType="Notice" resultType="Notice">
+        <![CDATA[
+        SELECT D.* FROM ( SELECT C.*, ROW_NUMBER() OVER(ORDER BY C.regdate DESC) AS listNum FROM (
+        ]]>
+        <include refid="Notice.selectNotice" />
+         <![CDATA[
+        WHERE 1=1
+        AND A.del_yn='N'
+        ORDER BY A.regdate DESC
+        ) C
+        ) D WHERE listNum > (#{nowPage}-1) * #{pageSize} AND listNum <= #{nowPage} * #{pageSize}
+        ]]>
+    </select>
+
+    <select id="Notice.selectNoticeFileList"  parameterType="Notice" resultType="Notice">
+        SELECT
+            A.SEQ               seq
+            ,A.FILE_NO          fileNo
+            ,A.FILESIZE         filesize
+            ,A.FILENAME         filename
+            ,A.DEL_YN           delYn
+            ,A.REAL_FILENAME    realFilename
+            ,A.FILEMIME         filemime
+        FROM FILEINFO A
+        WHERE DEL_YN='N'
+        AND A.SEQ = #{fileSeq}
+    </select>
+
+    <select id="Notice.selectNoticeView"  parameterType="Notice" resultType="Notice">
+        <include refid="Notice.selectNotice" />
+        WHERE A.SEQ = #{seq}
+    </select>
+
+    <update id="Notice.selectNoticeViewCnt" parameterType="Notice">
+        <!-- 글수정 -->
+        UPDATE NOTICE SET
+        VIEWCNT = NVL(VIEWCNT,0)+1
+        WHERE seq = #{seq}
+    </update>
+
+    <insert id="Notice.insertNotice" parameterType="Notice">
+        <!-- 글등록 -->
+        INSERT INTO NOTICE (
+        title
+        ,contents
+        ,account_id
+        ,top_yn
+        ,file_seq
+        ,regdate
+        ) values (
+        #{title}
+        ,#{contents}
+        ,#{accountId}
+        ,#{topYn}
+        ,#{fileSeq}
+        ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="Notice.updateNotice" parameterType="Notice">
+        <!-- 글수정 -->
+        UPDATE NOTICE SET
+        title = #{title}
+        ,contents = #{contents}
+        ,top_yn = #{topYn}
+        ,file_seq = #{fileSeq}
+        ,moddate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        WHERE seq = #{seq}
+    </update>
+
+    <update id="Notice.deleteNotice" parameterType="int">
+        <!-- 글삭제 -->
+        UPDATE NOTICE SET
+        del_yn = 'Y'
+        ,moddate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        WHERE seq = #{seq}
+    </update>
+
+    <insert id="Notice.insertNoticeFile" parameterType="Notice">
+        <!-- 글등록 -->
+        INSERT INTO FILEINFO (
+        seq
+        ,filename
+        ,file_no
+        ,filesize
+        ,real_filename
+        ,filemime
+        ) values (
+        #{seq}
+        ,#{filename}
+        ,#{fileNo}
+        ,#{filesize}
+        ,#{realFilename}
+        ,#{filemime}
+        )
+    </insert>
+
+    <update id="Notice.updateNoticeFile" parameterType="Notice">
+        <!-- 글등록 -->
+        UPDATE FILEINFO SET
+        filename = #{filename}
+        , filesize = #{filesize}
+        WHERE seq = #{seq} AND file_no = #{fileNo}
+    </update>
+
+    <select id="Notice.selectFileSeq" resultType="int">
+        SELECT NVL(MAX(SEQ),0) + 1 AS seq
+        FROM FILEINFO
+    </select>
+
+    <select id="Notice.selectFileNo" parameterType="int" resultType="int">
+        SELECT NVL(MAX(FILE_NO),0) + 1 AS fileNo
+        FROM FILEINFO
+        WHERE seq = #{seq}
+    </select>
+
+    <select id="Notice.selectFileCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM FILEINFO
+        WHERE seq = #{seq} AND del_yn='N'
+    </select>
+
+    <update id="Notice.deleteNoticeFile" parameterType="Notice">
+        <!-- 파일삭제 -->
+        UPDATE FILEINFO SET
+        del_yn = 'Y'
+        WHERE seq = #{seq} AND file_no = #{fileNo}
+    </update>
+
+</mapper>

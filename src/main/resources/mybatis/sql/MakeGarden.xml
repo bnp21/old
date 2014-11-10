@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MakeGarden">
+
+    <sql id="MakeGarden.selectMakeGarden">
+        SELECT
+        A.SEQ           seq
+        ,A.TITLE        title
+        ,A.NAME         name
+        ,A.PHONE        phone
+        ,A.EMAIL        email
+        ,A.ADDR         addr
+        ,A.MEMO         memo
+        ,A.REPLY_MEMO   replyMemo
+        ,A.CREATEDATE   createdate
+        ,A.REPLYDATE    replydate
+        ,A.REPLYID      replyid
+        ,A.REPLY_DEPT     replyDept
+        ,A.REPLY_PHONE    replyPhone
+        ,A.REPLY_NAME     replyName
+        ,A.REPLY_EMAIL    replyEmail
+        ,( CASE WHEN A.REPLY_YN='Y' THEN '답변완료' ELSE '미답변' END )     replyYn
+        FROM MAKEGARDEN A
+    </sql>
+
+    <select id="MakeGarden.selectMakeGardenList" parameterType="MakeGarden" resultType="MakeGarden">
+        <include refid="MakeGarden.selectMakeGarden" />
+        WHERE 1=1
+        ORDER BY A.SEQ DESC
+    </select>
+
+    <select id="MakeGarden.selectMakeGardenView" parameterType="MakeGarden" resultType="MakeGarden">
+        <include refid="MakeGarden.selectMakeGarden" />
+        WHERE 1=1
+        AND SEQ = #{seq}
+    </select>
+
+    <insert id="MakeGarden.insertMakeGarden" parameterType="MakeGarden">
+        INSERT INTO MAKEGARDEN
+        (
+        SEQ
+        ,TITLE
+        ,NAME
+        ,PHONE
+        ,EMAIL
+        ,ADDR
+        ,MEMO
+        ,CREATEDATE
+        ) VALUES
+        (
+        (SELECT MAX(NVL(SEQ,0))+1 FROM MAKEGARDEN)
+        ,#{title}
+        ,#{name}
+        ,#{phone}
+        ,#{email}
+        ,#{addr}
+        ,#{memo}
+        ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="MakeGarden.updateMakeGarden" parameterType="MakeGarden">
+        UPDATE MAKEGARDEN SET
+        REPLYDATE = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        ,REPLYID = #{replyid}
+        ,REPLY_DEPT = #{replyDept}
+        ,REPLY_PHONE = #{replyPhone}
+        ,REPLY_NAME = #{replyName}
+        ,REPLY_EMAIL = #{replyEmail}
+        ,REPLY_MEMO = #{replyMemo}
+        ,REPLY_YN = 'Y'
+        WHERE SEQ = #{seq}
+    </update>
+
+    <select id="MakeGarden.getEmailReceivers" parameterType="Email" resultType="Email">
+         SELECT
+         A.SEQ           seq
+        ,A.NAME         name
+        ,A.EMAIL        receiverEmail
+        FROM EMAIL A
+        WHERE 1=1
+        ORDER BY A.SEQ ASC
+    </select>
+
+</mapper>

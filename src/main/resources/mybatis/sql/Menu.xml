@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Menu">
+
+    <!-- 공통코드 목록 -->
+    <select id="Menu.selectMenuList" parameterType="Menu" resultType="Menu">
+        SELECT 
+            ID                  id
+            ,NAME               name
+            ,USE_YN             useYn
+            ,URL                url
+            ,OUTLINK_YN         outlinkYn
+            ,THUMBNAIL_NAME     thumbnailName
+            ,BIGSIZE_YN         bigsizeYn
+            ,CREATEDATE         createdate
+            ,CREATEID           createid
+            ,UPDATEDATE         updatedate
+            ,UPDATEID           updateid
+            ,FILE_NAME          fileName
+            ,TITLE              title
+            ,FOOTERURL          footerurl
+        FROM MENU
+        WHERE 1 = 1
+        <if test="id != 0 and id != null">
+            AND id = #{id}
+        </if>
+    </select>
+
+    <select id="Menu.selectOutMenuList"
+            resultType="Menu">
+      SELECT
+        ID
+        ,NAME
+        ,USE_YN useYn
+        ,URL
+        ,OUTLINK_YN outlinkYn
+        ,THUMBNAIL_NAME thumbnailName
+        ,BIGSIZE_YN bigsizeYn
+        ,CREATEDATE
+        ,CREATEID
+        ,UPDATEDATE
+        ,UPDATEID
+        ,FILE_NAME fileName
+        ,AUTODATA_YN autodataYn
+        ,FOOTERURL          footerurl
+       FROM MENU
+      WHERE ID NOT IN (SELECT MENU_ID FROM MAIN)
+       ORDER BY UPDATEDATE DESC
+    </select>
+
+    <update id="Menu.updateMenu" parameterType="Menu">
+        UPDATE MENU SET
+            UPDATEID = #{updateid}
+            ,UPDATEDATE = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+            <trim suffixOverrides=",">
+                <if test="url != null">, URL = #{url}</if>
+                <if test="thumbnailName != null">, THUMBNAIL_NAME = #{thumbnailName}</if>
+                <if test="fileName != null">, FILE_NAME = #{fileName}</if>
+                <if test="title != null">, TITLE = #{title}</if>
+                <if test="outlinkYn != null">, OUTLINK_YN = #{outlinkYn}</if>
+                <if test="footerurl != null">, FOOTERURL = #{footerurl}</if>
+            </trim>
+            WHERE id=#{id}
+    </update>
+</mapper>

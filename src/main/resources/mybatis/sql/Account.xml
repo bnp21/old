@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Account">
+
+    <select id="Account.checkAccount"
+            parameterType="Account"
+            resultType="Account">
+        <!-- 회원 정보 조회 -->
+        SELECT
+        id
+        ,name
+        ,email
+        ,password
+        ,authority
+        ,authority2
+        ,authority3
+        ,authority4
+        ,authority5
+        ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY ) url
+        ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY2 ) url2
+        ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY3 ) url3
+        ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY4 ) url4
+        ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY5 ) url5
+        ,activation
+        FROM account
+        WHERE 1 = 1
+        AND email = #{email}
+        AND password = #{password}
+    </select>
+
+    <select id="Account.selectAccount"
+            parameterType="Account"
+            resultType="Account">
+        <!-- 회원 정보 조회 -->
+        SELECT
+              id
+              ,name
+              ,email
+              ,password
+              ,authority
+              ,authority2
+              ,authority3
+              ,authority4
+              ,authority5
+            ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY ) url
+            ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY2 ) url2
+            ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY3 ) url3
+            ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY4 ) url4
+            ,(SELECT URL FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY5 ) url5
+              ,activation
+          FROM account
+         WHERE 1 = 1
+        <if test="id != 0">
+           AND id = #{id}
+        </if>
+        <if test="email != null">
+           AND email = #{email}
+        </if>
+        AND activation = 'ENABLE'
+    </select>
+
+    <select id="Account.selectAccountList"
+            parameterType="Account"
+            resultType="Account">
+        <!-- 회원 정보 목록 조회 -->
+        SELECT id
+              ,name
+              ,email
+              ,password
+              ,(SELECT NAME FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY ) authority
+              ,(SELECT NAME FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY2 ) authority2
+              ,(SELECT NAME FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY3 ) authority3
+              ,(SELECT NAME FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY4 ) authority4
+              ,(SELECT NAME FROM AUTH A WHERE 1=1 AND A.AUTH_ID=AUTHORITY5 ) authority5
+              ,activation
+          FROM account
+        WHERE 1=1
+        <if test="name != null and name != ''">
+           AND name like '%' || #{name} || '%'
+        </if>
+        <if test="activation != null and activation != ''">
+            AND activation = #{activation}
+        </if>
+        <if test="authority != null and authority != ''">
+            AND authority = #{authority}
+        </if>
+    </select>
+
+    <select id="Account.selectAuthList"
+            parameterType="Account"
+            resultType="Account">
+        <!-- 권한 목록 조회 -->
+        SELECT AUTH_ID authId
+              ,NAME
+              ,URL
+          FROM auth
+        WHERE 1=1
+        ORDER BY AUTH_ID
+    </select>
+
+    <insert id="Account.insertAccount"
+            parameterType="Account">
+        <!-- 회원 가입 -->
+        INSERT INTO account (
+            id
+            ,name
+            ,email
+            ,password
+            ,authority
+            ,authority2
+            ,authority3
+            ,authority4
+            ,authority5
+            ,activation
+        ) values (
+                (SELECT MAX(NVL(ID,0))+1 FROM account)
+            , #{name}
+            ,#{email}
+            ,#{password}
+            ,#{authority}
+            ,#{authority2}
+            ,#{authority3}
+            ,#{authority4}
+            ,#{authority5}
+            ,'ENABLE'
+        )
+        <!--<selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>-->
+    </insert>
+
+    <update id="Account.updateAccount"
+            parameterType="Account">
+        <!-- 회원 정보 수정 -->
+        UPDATE account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="authority != null">authority = #{authority},</if>
+            <if test="authority2 != null">authority2 = #{authority2},</if>
+            <if test="authority3 != null">authority3 = #{authority3},</if>
+            <if test="authority4 != null">authority4 = #{authority4},</if>
+            <if test="authority5 != null">authority5 = #{authority5},</if>
+            <if test="activation != null">activation = #{activation},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id != null">id = #{id}</if>
+            <if test="email != null">AND email = #{email}</if>
+        </trim>
+    </update>
+
+</mapper>

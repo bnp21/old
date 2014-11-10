@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "mybatis-3-config.dtd">
+<configuration>
+    <!-- Difinition of myBatis Configuration -->
+    <settings>
+        <setting name="cacheEnabled"        value="false" />
+        <setting name="useGeneratedKeys"    value="true"  />
+        <setting name="defaultExecutorType" value="REUSE" />
+    </settings>
+
+    <!-- Difinition of MAPPER Alias -->
+    <typeAliases>
+        <typeAlias type="com.info.web.domain.Account"     alias="Account"     />
+        <typeAlias type="com.info.web.domain.User"        alias="User"        />
+        <typeAlias type="com.info.web.domain.Common"      alias="Common"      />
+        <typeAlias type="com.info.web.domain.Board"      alias="Board"      />
+        <typeAlias type="com.info.web.domain.Notice"      alias="Notice"      />
+        <typeAlias type="com.info.web.domain.Item"      alias="Item"      />
+        <typeAlias type="com.info.web.domain.Menu"      alias="Menu"      />
+        <typeAlias type="com.info.web.domain.Batch"      alias="Batch"      />
+        <typeAlias type="com.info.web.domain.Main"      alias="Main"      />
+        <typeAlias type="com.info.web.domain.Statistics"      alias="Statistics"      />
+        <typeAlias type="com.info.web.domain.Grain"      alias="Grain"      />
+        <typeAlias type="com.info.web.domain.InternationalRawMaterial"      alias="InternationalRawMaterial"      />
+        <typeAlias type="com.info.web.domain.Atnews"      alias="Atnews"      />
+        <typeAlias type="com.info.web.domain.Education"      alias="Education"      />
+        <typeAlias type="com.info.web.domain.FarmDealTrend"      alias="FarmDealTrend"      />
+        <typeAlias type="com.info.web.domain.ProcessedFood"      alias="ProcessedFood"      />
+        <typeAlias type="com.info.web.domain.WeeklyShopping"      alias="WeeklyShopping"      />
+        <typeAlias type="com.info.web.domain.EatingBusiness"      alias="EatingBusiness"      />
+        <typeAlias type="com.info.web.domain.DistributionReality"      alias="DistributionReality"      />
+        <typeAlias type="com.info.web.domain.ForeignWholesale"      alias="ForeignWholesale"      />
+        <typeAlias type="com.info.web.domain.FlowerVolume"      alias="FlowerVolume"      />
+        <typeAlias type="com.info.web.domain.ExportWeather"      alias="ExportWeather"      />
+        <typeAlias type="com.info.web.domain.MainIndicators"      alias="MainIndicators"      />
+        <typeAlias type="com.info.web.domain.MakeGarden"      alias="MakeGarden"      />
+        <typeAlias type="com.info.web.domain.Email"      alias="Email"      />
+        <typeAlias type="com.info.web.domain.Price"      alias="Price"      />
+        <typeAlias type="com.info.web.domain.DailyPrice"      alias="DailyPrice"      />
+        <typeAlias type="com.info.web.domain.FoodInfo"      alias="FoodInfo"      />
+    </typeAliases>
+</configuration>

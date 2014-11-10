@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Common">
+
+    <!-- 공통코드 목록 -->
+    <sql id="Common.selectCode">
+        SELECT
+            A.common_code, A.description,
+            A.attribute1, A.attribute1desc,
+            A.attribute2, A.attribute2desc,
+            A.attribute3, A.attribute3desc,
+            A.attribute4, A.attribute4desc,
+            A.attribute5, A.attribute5desc
+          FROM commons A
+    </sql>
+
+    <select id="Common.selectCodeList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+          WHERE GROUP_CODE = '2100'
+       ORDER BY GROUP_CODE,
+                DISPLAY
+    </select>
+
+    <!-- 성별 리스트  -->
+    <select id="Common.selectGenderList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        WHERE GROUP_CODE = '2100'
+     ORDER BY GROUP_CODE,
+              DISPLAY
+    </select>
+
+    <!-- 월 리스트 -->
+    <select id="Common.selectMonthList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        WHERE GROUP_CODE = '0000'
+     ORDER BY GROUP_CODE,
+               TO_NUMBER(DISPLAY)
+    </select>
+
+    <!-- 메인 카테고리 리스트 -->
+    <select id="Common.selectMainCategoryList"
+            resultType="Common">
+        SELECT
+            CODE AS code,
+            CODE_NAME AS codeName
+          FROM CODES
+        WHERE GROUP_CODE = '1000'
+     ORDER BY GROUP_CODE,
+        TO_NUMBER(DISPLAY)
+    </select>
+
+    <!-- 메인 카테고리 -->
+    <select id="Common.selectMainCategory"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        WHERE GROUP_CODE = '1000'
+          AND CODE = #{code}
+          AND ROWNUM = 1
+    </select>
+
+    <!-- 서브 카테고리 -->
+    <select id="Common.selectSubCategory"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        WHERE PARENT_CODE = #{parentCode}
+        AND CODE = #{code}
+        AND ROWNUM = 1
+    </select>
+
+    <!-- 서브 카테고리 리스트 -->
+    <select id="Common.selectSubCategoryList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        <if test="parentCode != null">
+        WHERE PARENT_CODE = #{parentCode}
+        </if>
+
+        ORDER BY GROUP_CODE,
+        TO_NUMBER(DISPLAY)
+    </select>
+
+    <!-- 지역(시,군) 리스트 -->
+    <select id="Common.selectMainAreaList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        WHERE GROUP_CODE = '2300'
+        ORDER BY GROUP_CODE,
+        TO_NUMBER(DISPLAY)
+    </select>
+
+    <!-- 지역(동,읍) 리스트 -->
+    <select id="Common.selectSubAreaList"
+            resultType="Common">
+        <include refid="Common.selectCode" />
+        <if test="parentCode != null">
+            WHERE PARENT_CODE = #{parentCode}
+        </if>
+        ORDER BY GROUP_CODE,
+        TO_NUMBER(DISPLAY)
+    </select>
+
+    <!-- 업로드 이미지 정보 저장 -->
+    <insert id="Common.insertImage"
+            parameterType="Common">
+        <!-- 프로필 생성 -->
+        INSERT INTO IMAGES (
+        IMAGE_ID
+        ,TALENT_ID
+        ,IMAGE_NAME
+        ,DELETE_YN
+        ,CREATE_DATE
+        ) values (
+         #{imageId}
+        ,#{talentId}
+        ,#{imageName}
+        ,#{deleteYn}
+        ,sysdate
+        )
+    </insert>
+
+    <select id="Common.selectImageId"
+            resultType="int">
+        SELECT NVL(MAX(IMAGE_ID),0) + 1 AS imageId
+        FROM IMAGES
+    </select>
+
+    <select id="Common.selectMovieId"
+            resultType="int">
+        SELECT NVL(MAX(MOVIE_ID),0) + 1 AS movieId
+        FROM MOVIES
+    </select>
+
+<!--    <select id="Common.nextIntegerId" resultType="Board">
+        SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS nextIntegerId  FROM BOARD
+            WHERE BBS_ID = '3'
+    </select>-->
+
+    <sql id="Common.selectBoard">
+        SELECT
+            A.NTT_ID          nttId,
+            A.BBS_ID          bbsId,
+            A.NTT_SJ          nttSj,
+            A.NTT_CN          nttCn,
+            A.INSERT_ID       insertId,
+            DATE_FORMAT(A.INSERT_DATE,'%y-%m-%d %p %h:%i')  insertDate,
+            A.RDCNT           rdcnt
+            FROM BOARD A,
+            BOARD_MASTER B
+       WHERE A.USE_AT = 'Y'
+         AND A.BBS_ID = B.BBS_ID
+         AND A.BBS_ID = '3'
+    </sql>
+
+
+    <select id="Common.selectBoardList"  parameterType="Board" resultType="Board">
+        <include refid="Common.selectBoard" />
+
+<!--        <choose>
+            <when test="select2 = 1 AND #{searchVal} != ''">
+                AND NTT_SJ like CONCAT('%', #{searchVal}, '%')
+            </when>
+            <when test="select2 = 2 AND #{searchVal} != ''">
+                AND NTT_CN like CONCAT('%', #{searchVal}, '%')
+            </when>
+            <when test="select2 = 3 AND #{searchVal} != ''">
+                AND INSERT_ID like CONCAT('%', #{searchVal}, '%')
+            </when>
+            <otherwise>
+
+            </otherwise>
+        </choose>-->
+
+        AND A.DELETE_ID = ''
+    </select>
+
+    <insert id="Common.writeBoardArticle" parameterType="Board" >
+        <![CDATA[
+			INSERT INTO BOARD
+			(NTT_ID,
+			 BBS_ID,
+			 NTT_NO,
+			 NTT_SJ,
+			 NTT_CN,
+			 SORT_ORDR,
+			 USE_AT,
+			 ANSWER_AT,
+			 ATCH_FILE_ID,
+			 INSERT_ID,
+			 INSERT_DATE
+			 )
+			VALUES
+			(
+			#{nttId},
+			#{bbsId},
+			(SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS nttNo  FROM BOARD
+            WHERE BBS_ID = '3'),
+			#{nttSj},
+			#{nttCn},
+			(SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS sortOrder  FROM BOARD
+            WHERE BBS_ID = '3'),
+			'Y',
+			'Y',
+			#{atchFileId},
+			#{insertId},
+			SYSDATE()
+			)
+		]]>
+    </insert>
+
+    <insert id="Common.insertBoardMaster" parameterType="Board">
+		<![CDATA[
+			INSERT INTO BOARD_MASTER (
+              BBS_TY_CODE,
+              BBS_ATTRB_CODE,
+              BBS_NM,
+              BBS_INTRCN,
+			  REPLY_POSBL_AT,
+			  FILE_ATCH_POSBL_AT,
+			  ATCH_POSBL_FILE_NUMBER,
+			  ATCH_POSBL_FILE_SIZE,
+			  TMPLAT_ID,
+			  USE_AT,
+			  insert_id,
+              insert_date
+		   ) VALUES (
+		      #{bbsTyCode},
+		      #{bbsAttrbCode},
+		      #{bbsNm},
+		      #{bbsIntrcn},
+			  #{replyPosblAt},
+			  #{fileAtchPosblAt},
+			  #{posblAtchFileNumber},
+			  #{posblAtchFileSize},
+			  #{tmplatId},
+			  #{useAt},
+			  #{frstRegisterId},
+			  SYSDATE()
+			 )
+		]]>
+    </insert>
+
+<!--    <select id="Common.selectBoardList"
+            resultType="Board">
+        SELECT
+            A.BBS_ID          bbs_id,
+            A.BBS_NM          bbs_nm,
+            A.BBS_TY_CODE     ty_code,
+            A.BBS_ATTRB_CODE  attrb_code,
+            A.TMPLAT_ID       tmplat_id,
+            B.NTT_ID          b_ntt_id,
+            B.BBS_ID          b_bbs_id,
+            B.NTT_NO          b_ntt_no,
+            B.NTT_SJ          b_ntt_sj,
+            B.NTT_CN          b_ntt_cn,
+            B.ANSWER_AT       b_answer_at,
+            B.PARNTSCTT_NO    b_parntsctt_no,
+            B.ANSWER_LC       b_answer_lc,
+            B.SORT_ORDR       b_sort_order,
+            B.RDCNT           b_rdcnt,
+            B.USE_AT          b_use_at,
+            B.NTCE_BGNDE      b_ntce_bgnde,
+            B.NTCE_ENDDE      b_ntce_endde,
+            B.NTCR_ID         b_ntcr_id,
+            B.NTCR_NM         b_ntcr_nm,
+            B.PASSWORD        b_password,
+            B.ATCH_FILE_ID    b_atch_file_id
+            FROM BOARD_MASTER A,
+            BOARD B
+       WHERE A.USE_AT = 'Y'
+         AND A.BBS_ID = B.BBS_ID
+         AND A.BBS_ID = #{bbsId}
+    </select>-->
+
+    <select id="Common.selectCommentList"
+            resultType="Board">
+        SELECT
+            NTT_ID        nttId,
+            BBS_ID        bbsId,
+            ANSWER_NO     answerNo,
+            WRTER_ID      wrterId,
+            WRTER_NM      wrterNm,
+            ANSWER        answer,
+            USE_AT        useAt,
+            INSERT_DATE   insertDate,
+            INSERT_ID     insertId,
+            UPDATE_DATE   updateDate,
+            UPDATE_ID     updateId,
+            PASSWORD      password
+         FROM BOARD_COMMENT
+        WHERE USE_AT = 'Y'
+          AND NTT_ID = #{nttId}
+          AND BBS_ID = #{bbsId}
+    </select>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE decorators>
+<decorators defaultdir="/WEB-INF/views/decorators">
+    <excludes>
+        <pattern>/resource/*</pattern>
+        <pattern>/resource/js/*</pattern>
+        <pattern>/resource/css/*</pattern>
+        <pattern>/resource/images/*</pattern>
+        <pattern>/resource/images/*/*</pattern>
+        <pattern>/resource/images/*/*/*</pattern>
+        <!--
+        <pattern>/service/*/*</pattern>
+        <pattern>/service/*</pattern>
+        -->
+    </excludes>
+
+    <decorator name="account" page="account.jsp">
+        <pattern>/account/*</pattern>
+    </decorator>
+
+    <decorator name="main-content" page="front.jsp">
+        <pattern>/index</pattern>
+    </decorator>
+
+    <decorator name="front-content" page="front.jsp">
+        <pattern>/*</pattern>
+        <pattern>/</pattern>
+    </decorator>
+
+    <decorator name="mobile-content" page="mobile.jsp">
+        <pattern>/mobile/*</pattern>
+        <pattern>/mobile</pattern>
+    </decorator>
+
+    <decorator name="file-content" page="file.jsp">
+        <pattern>/file/*</pattern>
+        <pattern>/file</pattern>
+    </decorator>
+
+    <decorator name="full-content" page="admin.jsp">
+        <pattern>/admin</pattern>
+        <pattern>/admin/*</pattern>
+    </decorator>
+    <!--
+<decorator name="default" page="default.jsp">
+
+  <pattern>/help/*</pattern>
+  <pattern>/company/*</pattern>
+  <pattern>/profile/*</pattern>
+  <pattern>/recipe/*</pattern>
+  <pattern>/account/*</pattern>
+
+        <pattern>/</pattern>
+    </decorator>          -->
+
+</decorators>

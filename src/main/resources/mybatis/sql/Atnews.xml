@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Atnews">
+
+    <sql id="Atnews.selectAtnews">
+        SELECT
+            EVENT_ID        eventId
+            ,EVENT_NM       eventNm
+            ,HOST           host
+            ,START_YEAR     startYear
+            ,START_MONTH    startMonth
+            ,START_DAY      startDay
+            ,STOP_YEAR      stopYear
+            ,STOP_MONTH     stopMonth
+            ,STOP_DAY       stopDay
+            ,INQUIRY        inquiry
+            ,DISPLAY_TYPE   displayType
+            ,CREATEID       createid
+            ,UPDATEDATE     updatedate
+            ,UPDATEID       updateid
+            ,CREATEDATE     creatdate
+            ,TYPE           type
+            ,CONDUCT        conduct
+        FROM EVENT A
+    </sql>
+
+
+    <select id="Atnews.selectAtnewsList"  parameterType="Atnews" resultType="Atnews">
+        <include refid="Atnews.selectAtnews" />
+        WHERE 1=1
+        AND A.DISPLAY_TYPE='1'
+        AND A.PK_DATE=(SELECT MAX(PK_DATE) FROM EVENT)
+        AND ROWNUM   <![CDATA[ < ]]> 6
+        ORDER BY A.PK_DATE DESC, A.START_YEAR DESC, A.START_MONTH DESC, A.START_DAY DESC
+    </select>
+</mapper>

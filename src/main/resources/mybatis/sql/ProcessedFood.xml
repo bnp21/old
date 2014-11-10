@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProcessedFood">
+
+    <select id="ProcessedFood.selectProcessedFoodList" parameterType="ProcessedFood" resultType="ProcessedFood">
+        <!-- 회원 정보 목록 조회 -->
+        SELECT
+            A.ITEM_CODE                     itemCode
+            ,REPLACE(A.ITEM_CODE,'C','')    itemNum
+            ,A.PRODUCT_NAME                 productName
+            ,A.REFERENCE_DATE_FROM          referenceDateFrom
+            ,A.REFERENCE_DATE_TO            referenceDateTo
+            ,A.WEEKLY_PRICE                 weeklyPrice
+            ,A.LAST_MONTH_PRICE             lastMonthPrice
+            ,A.WEEKLY_FLUCTUATION           weeklyFluctuation
+            ,A.CREATEID                     createid
+            ,A.CREATEDATE                   createdate
+            ,A.UPDATEID                     updateid
+            ,A.UPDATEDATE                   updatedate
+            ,B.NAME                         itemName
+            ,B.UNIT                         unit
+        FROM PROCESSED_FOOD A INNER JOIN ITEM B ON A.ITEM_CODE=B.ITEM_CODE
+        WHERE 1=1
+        <if test="itemCode != null">
+            AND A.ITEM_CODE = #{itemCode}
+        </if>
+        <if test="referenceDateFrom != null">
+            AND A.REFERENCE_DATE_FROM = #{referenceDateFrom}
+        </if>
+        <if test="referenceDateTo != null">
+            AND A.REFERENCE_DATE_TO = #{referenceDateTo}
+        </if>
+        ORDER BY A.REFERENCE_DATE_FROM DESC, A.REFERENCE_DATE_TO DESC, A.ITEM_CODE ASC
+    </select>
+
+    <select id="ProcessedFood.checkProcessedFood"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM PROCESSED_FOOD
+        WHERE ITEM_CODE = #{itemCode}
+        AND PRODUCT_NAME = #{productName}
+        AND REFERENCE_DATE_FROM = #{referenceDateFrom}
+        AND REFERENCE_DATE_TO = #{referenceDateTo}
+    </select>
+
+    <select id="ProcessedFood.selectProcessedFoodTop" resultType="ProcessedFood">
+        <![CDATA[
+        SELECT
+            B.REFERENCE_DATE_FROM          referenceDateFrom
+            ,B.REFERENCE_DATE_TO            referenceDateTo
+        FROM
+        (
+            SELECT
+                A.REFERENCE_DATE_FROM
+                ,A.REFERENCE_DATE_TO
+            FROM PROCESSED_FOOD A
+            GROUP BY A.REFERENCE_DATE_FROM, A.REFERENCE_DATE_TO
+            ORDER BY A.REFERENCE_DATE_FROM DESC, A.REFERENCE_DATE_TO DESC
+        ) B
+        WHERE ROWNUM = 1
+        ]]>
+    </select>
+
+    <insert id="ProcessedFood.insertProcessedFood" parameterType="ProcessedFood">
+        INSERT INTO PROCESSED_FOOD
+        (
+            ITEM_CODE
+            ,PRODUCT_NAME
+            ,REFERENCE_DATE_FROM
+            ,REFERENCE_DATE_TO
+            ,WEEKLY_PRICE
+            ,LAST_MONTH_PRICE
+            ,WEEKLY_FLUCTUATION
+            ,CREATEID
+            ,CREATEDATE
+        ) VALUES
+        (
+            #{itemCode}
+            ,#{productName}
+            ,#{referenceDateFrom}
+            ,#{referenceDateTo}
+            ,#{weeklyPrice}
+            ,#{lastMonthPrice}
+            ,#{weeklyFluctuation}
+            ,#{createid}
+            ,to_char(sysdate, 'YYYYMMDD')
+        )
+    </insert>
+
+    <update id="ProcessedFood.updateProcessedFood" parameterType="ProcessedFood">
+        UPDATE PROCESSED_FOOD SET
+            updatedate = to_char(sysdate, 'YYYYMMDD') ,
+            updateid = #{updateid} ,
+        <trim suffixOverrides=",">
+            <if test="weeklyPrice != null">WEEKLY_PRICE = #{weeklyPrice},</if>
+            <if test="lastMonthPrice != null">LAST_MONTH_PRICE = #{lastMonthPrice},</if>
+            <if test="weeklyFluctuation != null">WEEKLY_FLUCTUATION = #{weeklyFluctuation},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="itemCode != null"> ITEM_CODE = #{itemCode}</if>
+            <if test="productName != null">AND PRODUCT_NAME = #{productName}</if>
+            <if test="referenceDateFrom != null">AND REFERENCE_DATE_FROM = #{referenceDateFrom}</if>
+            <if test="referenceDateTo != null">AND REFERENCE_DATE_TO = #{referenceDateTo}</if>
+        </trim>
+    </update>
+
+    <update id="ProcessedFood.deleteProcessedFood" parameterType="ProcessedFood">
+        DELETE FROM PROCESSED_FOOD
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="referenceDateFrom != null">AND REFERENCE_DATE_FROM = #{referenceDateFrom}</if>
+            <if test="referenceDateTo != null">AND REFERENCE_DATE_TO = #{referenceDateTo}</if>
+        </trim>
+
+    </update>
+
+</mapper>

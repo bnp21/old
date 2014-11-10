@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		">
+
+    <!-- 화훼시시세 시작 -->
+    <!-- 절화[N] -->
+    <bean name="batchJob01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--
+    <bean name="batchJob01_01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001" />
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <bean name="batchJob01_02" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001" />
+        <property name="concurrent" value="false" />
+    </bean>
+    -->
+    <!-- 관엽[C]  -->
+    <bean name="batchJob01C" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001C" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--
+    <bean name="batchJob01C_01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001C" />
+        <property name="concurrent" value="false" />
+    </bean>
+    -->
+    <!-- 난[Y]  -->
+    <bean name="batchJob01Y" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001Y" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--
+    <bean name="batchJob01Y_01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData001Y" />
+        <property name="concurrent" value="false" />
+    </bean>
+    -->
+    <!-- 화훼시시세 끝 -->
+
+    <!--//KATI, 해외도소매가격식품-->
+    <bean name="batchJob02" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData002" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <bean name="batchJob03" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData003" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <bean name="batchJob04" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData004" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <bean name="batchJob05" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData005" />
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <!-- 수출기상도 시작 -->
+    <bean name="batchJob06" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="batch" />
+        <property name="targetMethod" value="getBatchData006" />
+        <property name="concurrent" value="false" />
+    </bean>
+
+
+
+    <bean id="batch" class="com.info.framework.batch.service.BatchServiceImpl"/>
+
+    <!-- 화훼시시세 시작 30분 마다 - 최근경매일데이터만가지고 옮-->
+    <!-- 절화[N] -->
+    <bean id="trgBatchJob01" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01" />
+        <!-- 절화[N] 월수금 오전 5시에 실행 실행 MON TUE WED THU FRI-->
+        <property name="cronExpression" value="0 10/30 * ? * *" />
+    </bean>
+    <!--
+    <bean id="trgBatchJob01_01" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01_01" />
+        <property name="cronExpression" value="0 00 05 ? * WED" />
+    </bean>
+    <bean id="trgBatchJob01_02" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01_02" />
+        <property name="cronExpression" value="0 00 05 ? * FRI" />
+    </bean>
+    -->
+    <!-- 관엽[C]  -->
+    <bean id="trgBatchJob01C" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01C" />
+        <!-- 관엽[C] 화금 오후 3시에 실행 실행  -->
+        <property name="cronExpression" value="0 10/30 * ? * *" />
+    </bean>
+    <!--
+    <bean id="trgBatchJob01C_01" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01C_01" />
+        <property name="cronExpression" value="0 00 05 ? * FRI" />
+    </bean>
+     -->
+    <!-- 난[Y]  -->
+    <bean id="trgBatchJob01Y" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01Y" />
+        <!-- 난[Y]-월목 오후 3시에 실행 실행 MON -->
+        <property name="cronExpression" value="0 10/30 * ? * *" />
+    </bean>
+    <!--
+    <bean id="trgBatchJob01Y_01" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob01Y_01" />
+        <property name="cronExpression" value="0 00 05 ? * THU" />
+    </bean>
+        -->
+    <!-- 화훼시시세 끝 -->
+
+    <!--//KATI, 해외도소매가격식품 -->
+    <bean id="trgBatchJob02" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob02" />
+        <!-- 매시간 30분에 실행 -->
+        <property name="cronExpression" value="0 30 * ? * *" />
+    </bean>
+    <!--//aT센터, 최근소식 -->
+    <bean id="trgBatchJob03" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob03" />
+        <!-- 매일 오후 3시 실행 -->
+        <property name="cronExpression" value="0 00 15 ? * *" />
+    </bean>
+    <!--//유통교육원, 연간교육일정 -->
+    <bean id="trgBatchJob04" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob04" />
+        <!-- 매일 오후 3시 실행 -->
+        <property name="cronExpression" value="0 00 15 ? * *" />
+    </bean>
+    <!-- 농축수산물소매 가격 일일동향 - 10개 defult로 설정-->
+    <bean id="trgBatchJob05" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob05" />
+        <!-- 매일 오후 3시 실행 -->
+        <property name="cronExpression" value="0 00 15 ? * *" />
+    </bean>
+
+    <!-- 수출기상도-->
+    <bean id="trgBatchJob06" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="batchJob06" />
+        <!-- 매주금요일 오후11시 -->
+        <property name="cronExpression" value="0 00 23 ? * FRI" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="trgBatchJob01" />
+                <!--
+                <ref bean="trgBatchJob01_01" />
+                <ref bean="trgBatchJob01_02" />
+                -->
+                <ref bean="trgBatchJob01C" />
+                <!--
+                <ref bean="trgBatchJob01C_01" />
+                -->
+                <ref bean="trgBatchJob01Y" />
+                <!--
+                <ref bean="trgBatchJob01Y_01" />
+                -->
+                <ref bean="trgBatchJob02" />
+                <ref bean="trgBatchJob03" />
+                <ref bean="trgBatchJob04" />
+                <ref bean="trgBatchJob05" />
+                <ref bean="trgBatchJob06" />
+            </list>
+        </property>
+    </bean>
+</beans>

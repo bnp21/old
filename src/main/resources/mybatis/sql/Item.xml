@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Item">
+
+    <!-- 공통코드 목록 -->
+    <select id="Item.selectItemList"
+            parameterType="Item"
+            resultType="Item">
+        SELECT
+            ID                  id
+            ,GROUP_CODE         groupCode
+            ,NAME               name
+            ,USE_YN             useYn
+            ,CREATEDATE         createdate
+            ,CREATEID           createid
+            ,UPDATEDATE         updatedate
+            ,UPDATEID           updateid
+            ,FILE_NAME          fileName
+            ,UNIT               unit
+            ,ITEM_CODE          itemCode
+        FROM ITEM
+        <if test="groupCode != null">
+            WHERE GROUP_CODE = #{groupCode}
+        </if>
+        ORDER BY ITEM_CODE ASC
+    </select>
+
+</mapper>

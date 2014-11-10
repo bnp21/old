@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Grain">
+
+    <select id="Grain.selectGrainMarketConditionList" parameterType="Grain" resultType="Grain">
+        <!-- 회원 정보 목록 조회 -->
+        SELECT A.item_code        itemCode
+        ,C.name                   itemName
+        ,A.reference_date         referenceDate
+        ,A.net_change_price       netChangePrice
+        ,A.reference_date_price   referenceDatePrice
+        ,A.reference_date_fluctuation   referenceDateFluctuation
+        ,A.average_price          averagePrice
+        ,A.average_fluctuation   averageFluctuation
+        ,A.createid               createid
+        ,A.createdate             createdate
+        ,A.updateid               updateid
+        ,A.updatedate             updatedate
+        ,(CASE WHEN B.reference_date IS NOT NULL THEN 'Y' ELSE 'N' END )   commendYn
+        FROM GRAIN_MARKET_CONDITION A LEFT JOIN GRAIN_MARKET_CONDITION_COMMENT B ON TRIM(A.reference_date)=TRIM(B.reference_date) INNER JOIN ITEM C ON A.ITEM_CODE=C.ITEM_CODE
+        WHERE 1=1
+        AND C.GROUP_CODE = 'A'
+        <if test="referenceDate != null">
+            AND TRIM(A.REFERENCE_DATE) = #{referenceDate}
+        </if>
+        ORDER BY A.reference_date DESC, A.item_code ASC
+    </select>
+
+    <select id="Grain.checkGrainMarketCondition"
+            resultType="int">
+        SELECT
+            count(*)
+          FROM GRAIN_MARKET_CONDITION
+         WHERE ITEM_CODE = #{itemCode}
+           AND REFERENCE_DATE = #{referenceDate}
+    </select>
+
+    <select id="Grain.checkGrainMarketCommentCondition"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM GRAIN_MARKET_CONDITION_COMMENT
+        WHERE REFERENCE_DATE = #{referenceDate}
+    </select>
+
+    <select id="Grain.selectGrainMarketConditionTop" resultType="Grain">
+        <![CDATA[
+        SELECT
+            B.REFERENCE_DATE          referenceDate
+        FROM
+        (
+            SELECT
+                A.REFERENCE_DATE
+            FROM GRAIN_MARKET_CONDITION A
+            GROUP BY A.REFERENCE_DATE
+            ORDER BY A.REFERENCE_DATE DESC
+        ) B
+        WHERE ROWNUM = 1
+        ]]>
+    </select>
+
+    <insert id="Grain.insertGrainMarketCondition" parameterType="Grain">
+        INSERT INTO GRAIN_MARKET_CONDITION
+        (
+        item_code
+        ,reference_date
+        ,net_change_price
+        ,reference_date_price
+        ,reference_date_fluctuation
+        ,average_price
+        ,average_fluctuation
+        ,createid
+        ,createdate
+        ) VALUES
+        (
+        #{itemCode}
+        ,#{referenceDate}
+        ,#{netChangePrice}
+        ,#{referenceDatePrice}
+        ,#{referenceDateFluctuation}
+        ,#{averagePrice}
+        ,#{averageFluctuation}
+        ,#{createid}
+        ,to_char(sysdate, 'YYYYMMDD')
+        )
+    </insert>
+
+    <update id="Grain.updateGrainMarketCondition" parameterType="Grain">
+        UPDATE GRAIN_MARKET_CONDITION SET
+            updatedate = to_char(sysdate, 'YYYYMMDD') ,
+            updateid = #{updateid} ,
+        <trim suffixOverrides=",">
+            <if test="netChangePrice != null">net_change_price = #{netChangePrice},</if>
+            <if test="referenceDatePrice != null">reference_date_price = #{referenceDatePrice},</if>
+            <if test="referenceDatePrice != null">reference_date_fluctuation = #{referenceDateFluctuation},</if>
+            <if test="averagePrice != null">average_price = #{averagePrice},</if>
+            <if test="averagePrice != null">average_fluctuation = #{averageFluctuation},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="itemCode != null">item_code = #{itemCode}</if>
+            <if test="referenceDate != null">AND reference_date = #{referenceDate}</if>
+        </trim>
+    </update>
+
+    <select id="Grain.selectGrainCommendView" parameterType="Grain" resultType="Grain">
+        SELECT
+            REFERENCE_DATE      referenceDate
+            ,COMMENTS           comments
+            ,CREATEID           createid
+            ,UPDATEDATE         updatedate
+            ,UPDATEID           updateid
+            ,CREATEDATE         createdate
+        FROM GRAIN_MARKET_CONDITION_COMMENT
+        WHERE 1=1
+        <if test="referenceDate != null and referenceDate != ''">
+            AND TRIM(REFERENCE_DATE) = TRIM(#{referenceDate})
+        </if>
+    </select>
+
+    <insert id="Grain.insertGrainCommend" parameterType="Grain">
+        INSERT INTO GRAIN_MARKET_CONDITION_COMMENT
+        (
+            REFERENCE_DATE
+            ,COMMENTS
+            ,CREATEID
+            ,CREATEDATE
+        )
+        VALUES
+        (
+            #{referenceDate}
+            ,#{comments}
+            ,#{createid}
+            ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="Grain.updateGrainCommend" parameterType="Grain">
+        UPDATE GRAIN_MARKET_CONDITION_COMMENT SET
+            COMMENTS = #{comments}
+            , UPDATEID = #{updateid}
+            , UPDATEDATE = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        WHERE  REFERENCE_DATE = #{referenceDate}
+    </update>
+</mapper>

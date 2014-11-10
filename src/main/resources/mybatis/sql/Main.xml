@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Main">
+
+    <!-- 메인 리스트 -->
+    <select id="Main.selectMainList" parameterType="Main" resultType="Main">
+        <![CDATA[
+        SELECT * FROM
+        (
+            /** 첫번째 화면 셋팅 start */
+            SELECT * FROM
+            (
+                SELECT
+                      A.ID SEQ
+                    ,NVL(A.ID,'')              id
+                    ,NVL(A.MENU_ID,'')        menuId
+                    ,NVL(A.CREATEDATE,'')     createdate
+                    ,NVL(A.CREATEID,'')       createid
+                    ,NVL(A.UPDATEDATE,'')     updatedate
+                    ,NVL(A.UPDATEID,'')       updateid
+                    ,NVL(A.FILE_NAME,'')      fileName
+                    ,NVL(B.THUMBNAIL_NAME,'') thumbnailName
+                    ,NVL(B.OUTLINK_YN,'')     outlinkYn
+                    ,NVL(B.NAME,'')           menuname
+                    ,NVL(B.AUTODATA_YN,'')    autodataYn
+                    ,NVL(B.URL,'')            url
+                    ,NVL(B.TITLE,'')          title
+                    ,NVL(B.FOOTERURL,'')      footerUrl
+                    ,NVL(C.NAME,'')           createname
+                    ,NVL(D.NAME,'')           updatename
+                    ,NVL(B.TYPE,'')           type
+                FROM MAIN A, MENU B, ACCOUNT C, ACCOUNT D
+                WHERE 1=1
+                AND A.MENU_ID=B.ID
+                AND A.CREATEID=C.ID
+                AND A.UPDATEID=D.ID
+            ]]>
+            <if test="id != 0 and id != null">
+                AND A.MENU_ID = #{menuId}
+            </if>
+            <if test="type != null">
+                AND B.TYPE = #{type}
+            </if>
+            <![CDATA[
+                ORDER BY A.ID ASC
+            ) WHERE ROWNUM <= 5
+            /** 첫번째 화면 셋팅 end */
+            UNION
+            /** 두번째 화면 셋팅 start */
+            SELECT
+                ROWNUM+5 SEQ
+                ,id     id
+                ,menuId
+                ,createdate
+                ,createid
+                ,updatedate
+                ,updateid
+                ,fileName
+                ,thumbnailName
+                ,outlinkYn
+                ,menuname
+                ,autodataYn
+                ,url
+                ,title
+                ,footerUrl
+                ,createname
+                ,updatename
+                ,type
+            FROM
+            (
+                SELECT
+                     NVL(A.ID,'')        id
+                    ,NVL(A.MENU_ID,'')        menuId
+                    ,NVL(A.CREATEDATE,'')     createdate
+                    ,NVL(A.CREATEID,'')       createid
+                    ,NVL(A.UPDATEDATE,'')     updatedate
+                    ,NVL(A.UPDATEID,'')       updateid
+                    ,NVL(A.FILE_NAME,'')      fileName
+                    ,NVL(B.THUMBNAIL_NAME,'') thumbnailName
+                    ,NVL(B.OUTLINK_YN,'')     outlinkYn
+                    ,NVL(B.NAME,'')           menuname
+                    ,NVL(B.AUTODATA_YN,'')    autodataYn
+                    ,NVL(B.URL,'')            url
+                    ,NVL(B.TITLE,'')          title
+                    ,NVL(B.FOOTERURL,'')      footerUrl
+                    ,NVL(C.NAME,'')           createname
+                    ,NVL(D.NAME,'')           updatename
+                    ,NVL(B.TYPE,'')           type
+                FROM MAIN A, MENU B, ACCOUNT C, ACCOUNT D
+                WHERE 1=1
+                AND A.MENU_ID=B.ID
+                AND A.CREATEID=C.ID
+                AND A.UPDATEID=D.ID
+            ]]>
+            <if test="id != 0 and id != null">
+                AND A.MENU_ID = #{menuId}
+            </if>
+            <if test="type != null">
+                AND B.TYPE = #{type}
+            </if>
+            <![CDATA[
+                AND (A.ID, A.MENU_ID) NOT IN
+                (
+                    SELECT id, menuId FROM
+                    (
+                        SELECT
+                        NVL(A.ID,'')        id
+                        ,NVL(A.MENU_ID,'')        menuId
+                        FROM MAIN A, MENU B, ACCOUNT C, ACCOUNT D
+                        WHERE 1=1
+                        AND A.MENU_ID=B.ID
+                        AND A.CREATEID=C.ID
+                        AND A.UPDATEID=D.ID
+            ]]>
+            <if test="id != 0 and id != null">
+                AND A.MENU_ID = #{menuId}
+            </if>
+            <if test="type != null">
+                AND B.TYPE = #{type}
+            </if>
+            <![CDATA[
+                        ORDER BY A.ID ASC
+                    ) WHERE ROWNUM <= 5
+                )
+                ORDER BY B.UPDATEDATE DESC
+            )
+            /** 두번째 화면 셋팅 end */
+        ) ORDER BY SEQ ASC
+        ]]>
+    </select>
+
+    <!-- 카테고리 리스트 -->
+    <select id="Main.selectCategoryList" parameterType="Main" resultType="Main">
+        <![CDATA[
+
+                SELECT
+                     NVL(A.ID,'')              id
+                    ,NVL(A.MENU_ID,'')        menuId
+                    ,NVL(A.CREATEDATE,'')     createdate
+                    ,NVL(A.CREATEID,'')       createid
+                    ,NVL(A.UPDATEDATE,'')     updatedate
+                    ,NVL(A.UPDATEID,'')       updateid
+                    ,NVL(A.FILE_NAME,'')      fileName
+                    ,NVL(B.THUMBNAIL_NAME,'') thumbnailName
+                    ,NVL(B.OUTLINK_YN,'')     outlinkYn
+                    ,NVL(B.NAME,'')           menuname
+                    ,NVL(B.AUTODATA_YN,'')    autodataYn
+                    ,NVL(B.URL,'')            url
+                    ,NVL(B.TITLE,'')          title
+                    ,NVL(B.FOOTERURL,'')      footerUrl
+                    ,NVL(B.TYPE,'')      type
+
+                FROM  MAIN A, MENU B
+                WHERE 1=1
+                AND A.MENU_ID=B.ID
+            ]]>
+
+        <if test="type != null">
+            AND B.TYPE = #{type}
+        </if><if test="url != null">
+            AND B.URL LIKE '%' || #{url} || '%'
+        </if>
+        <![CDATA[
+              ORDER BY B.UPDATEDATE
+        ]]>
+    </select>
+
+    <update id="Main.updateMain" parameterType="Main">
+        UPDATE MAIN SET
+            menu_id = #{menuId},
+            UPDATEDATE = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS'),
+            UPDATEID = #{updateid}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 통계 리스트 -->
+    <select id="Main.selectStatisticsList" parameterType="Statistics" resultType="Statistics">
+        SELECT
+            ROWNUM seq,
+            menuId,
+            menuNm,
+            visitantCnt,
+            visitCnt,
+            pageCnt,
+            pageGbn
+        FROM (
+                SELECT
+                      MENU_ID menuId,
+                      NVL(B.NAME,DECODE(A.MENU_ID,'90','메인','91','모바일 메인','21','전시일정','22','교육일정','23','창조마당','24','알림마당')) menuNm,
+                      VISITANT_CNT visitantCnt,
+                      VISIT_CNT visitCnt,
+                      PAGE_CNT pageCnt,
+                      PAGE_GBN pageGbn
+                      FROM (
+                          SELECT
+                                MENU_ID,
+                                PAGE_GBN,
+                                SUM(NVL(VISITANT_CNT,0)) VISITANT_CNT,
+                                SUM(NVL(VISIT_CNT,0)) VISIT_CNT,
+                                SUM(NVL(PAGE_CNT,0)) PAGE_CNT
+                         FROM STATISTICS A
+                         WHERE 1=1
+                <if test="searchViewGbn == 0 and searchViewGbn != null">
+                    AND A.PAGE_GBN IN ('A','B')
+                </if>
+                <if test="searchViewGbn == 1 and searchViewGbn != null">
+                    AND A.PAGE_GBN IN ('C')
+                </if>
+                <if test="searchViewGbn == 2 and searchViewGbn != null">
+                    AND A.PAGE_GBN IN ('D')
+                </if>
+
+                <if test="searchDateGbn == 0 and searchDateGbn != null">
+                    AND A.CONTACT_DATE =to_char(sysdate, 'YYYYMMDD')
+                </if>
+                <if test="searchDateGbn == 1 and searchDateGbn != null">
+                    AND to_char(to_date(A.CONTACT_DATE ,'YYYY-MM-DD HH24:MI:SS'), 'W') = to_char(sysdate, 'W')
+                    AND A.CONTACT_DATE LIKE to_char(sysdate, 'YYYYMM')||'%'
+                </if>
+                <if test="searchDateGbn == 2 and searchDateGbn != null">
+                    AND A.CONTACT_DATE LIKE to_char(sysdate, 'YYYYMM')||'%'
+                </if>
+                <if test="searchDateGbn == 3 and searchDateGbn != null">
+                    AND A.CONTACT_DATE LIKE to_char(sysdate, 'YYYY')||'%'
+                </if>
+                <if test="startDate != null and startDate != ''">
+                    AND A.CONTACT_DATE <![CDATA[ >=  ]]> #{startDate}
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    AND A.CONTACT_DATE <![CDATA[ <=  ]]> #{endDate}
+                </if>
+                 GROUP BY MENU_ID, PAGE_GBN
+                 ) A, MENU B
+                 WHERE 1=1
+                 AND A.MENU_ID=B.ID(+)
+                 ORDER BY A.PAGE_CNT DESC
+        )
+
+    </select>
+
+    <update id="Main.updateStatistics" parameterType="Statistics">
+        MERGE INTO STATISTICS
+        USING DUAL
+        ON (
+        IP=#{ip} AND MENU_ID=#{menuId} AND CONTACT_DATE=to_char(sysdate, 'YYYYMMDD') AND PAGE_GBN=#{pageGbn}
+        )
+        WHEN MATCHED THEN
+
+        UPDATE SET
+        CONTACT_TIME = CASE WHEN ( SELECT ROUND( ( to_date(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') - to_date(CONTACT_TIME,'YYYY-MM-DD HH24:MI:SS') ) *86400)
+        FROM STATISTICS WHERE IP=#{ip} AND MENU_ID=#{menuId} AND CONTACT_DATE=to_char(sysdate, 'YYYYMMDD') AND PAGE_GBN=#{pageGbn} )  <![CDATA[ <  ]]> 1800 THEN CONTACT_TIME
+        ELSE to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        END,
+        VISITANT_CNT =CASE WHEN ( SELECT COUNT(*) CNT FROM STATISTICS WHERE IP=#{ip} AND MENU_ID=#{menuId} AND CONTACT_DATE=to_char(sysdate, 'YYYYMMDD') AND PAGE_GBN=#{pageGbn})  <![CDATA[ >  ]]> 0 THEN VISITANT_CNT
+        ELSE VISITANT_CNT+1
+        END,
+        VISIT_CNT = CASE WHEN ( SELECT ROUND( ( to_date(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') - to_date(CONTACT_TIME,'YYYY-MM-DD HH24:MI:SS') ) *86400)
+        FROM STATISTICS WHERE IP=#{ip} AND MENU_ID=#{menuId} AND CONTACT_DATE=to_char(sysdate, 'YYYYMMDD') AND PAGE_GBN=#{pageGbn} )  <![CDATA[ <  ]]> 1800 THEN VISIT_CNT
+        ELSE VISIT_CNT+1
+        END,
+        PAGE_CNT = PAGE_CNT+1
+
+        WHEN NOT MATCHED THEN
+
+        INSERT(
+        IP,
+        MENU_ID,
+        CONTACT_DATE,
+        CONTACT_TIME,
+        VISITANT_CNT,
+        VISIT_CNT,
+        PAGE_CNT,
+        PAGE_GBN
+        )
+        VALUES(
+        #{ip},
+        #{menuId},
+        to_char(sysdate, 'YYYYMMDD'),
+        to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),
+        1,
+        1,
+        1,
+        #{pageGbn}
+        )
+    </update>
+
+</mapper>

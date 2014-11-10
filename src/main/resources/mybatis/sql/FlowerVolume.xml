@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FlowerVolume">
+    <select id="FlowerVolume.selectFlowerVolumeList" parameterType="FlowerVolume" resultType="FlowerVolume">
+        <![CDATA[
+        SELECT * FROM (
+            SELECT
+                A.TYPE                 type
+                ,A.ITEM_NAME            itemName
+                ,NVL(B.ITEM_CODE,DECODE(A.TYPE,'N','F31','Y','F32','C','F33'))  itemCode /* 절화[N] 난[Y] 관엽[C]*/
+                ,SUM(A.VOLUME)               volume
+                ,MAX(TO_NUMBER(A.MAX_PRICE))            maxPrice
+                ,MIN(TO_NUMBER(A.MIN_PRICE))            minPrice
+                /* ,ROUND(SUM(A.AVG_PRICE)/COUNT(*),1)            avgPrice  */
+                ,ROUND(SUM(NVL(A.T_PRICE,0))/NVL(SUM(A.VOLUME),1),0)            avgPrice
+                ,A.AUCTION_DAY          auctionDay
+                ,TO_CHAR(TO_DATE(A.AUCTION_DAY,'YYYYMMDD'),'dy')          dayWeek
+            FROM FLOWER_VOLUME A, ITEM B
+            WHERE 1=1
+            AND A.ITEM_NAME=B.NAME(+)
+            AND B.GROUP_CODE(+)=#{groupType}
+        ]]>
+            <if test="type != null">
+                AND A.TYPE = #{type}
+            </if>
+            <if test="auctionDay != null">
+                AND A.AUCTION_DAY = #{auctionDay}
+            </if>
+        <![CDATA[
+            GROUP BY A.ITEM_NAME, B.ITEM_CODE, A.AUCTION_DAY, A.TYPE
+            ORDER BY TO_NUMBER(volume) DESC
+        ) C WHERE ROWNUM <= 5
+        ]]>
+    </select>
+    <!-- 운영시만 주석제거 - 최근경매일자로 데이터가져오기 -->
+    <!--AND B.AUCTION_DAY IN ( SELECT MAX(MAGAM_ILJA) FROM A_DAY_MAGAM@link_flw WHERE 1=1 AND BUN_CHK=#{type} GROUP BY BUN_CHK ) -->
+    <select id="FlowerVolume.selectFlowerVolumeTop" parameterType="FlowerVolume" resultType="FlowerVolume">
+        <![CDATA[
+        SELECT
+            B.AUCTION_DAY          auctionDay
+            ,#{type}                 type
+        FROM
+        (            SELECT
+                A.AUCTION_DAY
+            FROM FLOWER_VOLUME A
+            WHERE TYPE=#{type}
+            GROUP BY A.AUCTION_DAY
+            ORDER BY A.AUCTION_DAY DESC
+        ) B
+        WHERE 1=1
+        AND B.AUCTION_DAY IN ( SELECT MAX(MAGAM_ILJA) FROM A_DAY_MAGAM@link_flw WHERE 1=1 AND BUN_CHK=#{type} GROUP BY BUN_CHK )
+        AND ROWNUM = 1
+        ]]>
+    </select>
+    <!-- 운영시만 주석제거 - 최근경매일자로 데이터가져오기 -->
+    <!--AND B.AUCTION_DAY IN ( SELECT MAX(MAGAM_ILJA) FROM A_DAY_MAGAM@link_flw WHERE 1=1 AND BUN_CHK=#{type} GROUP BY BUN_CHK ) -->
+    <select id="FlowerVolume.selectFlowerVolumeMain" parameterType="FlowerVolume" resultType="FlowerVolume">
+        <![CDATA[
+        SELECT
+            B.AUCTION_DAY          auctionDay
+            ,#{type}                 type
+        FROM
+        (
+            SELECT
+                A.AUCTION_DAY
+            FROM FLOWER_VOLUME A
+            WHERE TYPE=#{type}
+            GROUP BY A.AUCTION_DAY
+            ORDER BY A.AUCTION_DAY DESC
+        ) B
+        WHERE 1=1
+        AND B.AUCTION_DAY IN ( SELECT MAX(MAGAM_ILJA) FROM A_DAY_MAGAM@link_flw WHERE 1=1 AND BUN_CHK=#{type} GROUP BY BUN_CHK )
+        AND ROWNUM = 1
+        ]]>
+    </select>
+</mapper>

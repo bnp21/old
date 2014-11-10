@@ -1,0 +1,80 @@
+@charset "utf-8";
+/*@font-face {*/
+  /*font-family:'NanumGothic';*/
+  /*src: url('/resources/front/font/NanumGothic.eot');*/
+  /*src: url('/resources/front/font/NanumGothic.eot?#iefix') format('embedded-opentype'), *//* ie 6,7,8 적용 embedded-opentype ie 8,9 적용 */
+       /*url('/resources/front/font/NanumGothic.woff') format('woff'), *//* ie 제외한 나머지 */
+       /*url('/resources/front/font/NanumGothic.ttf') format('truetype');*/
+/*}*/
+/*@font-face{*/
+/*font-family:'roboto';*/
+/*src:url('/resources/front/font/Roboto_Medium.eot');*/
+/*src:url('/resources/front/font/Roboto_Medium.eot?#iefix') format('embedded-opentype'),*/
+/*url('/resources/front/font/Roboto_Medium.woff') format('woff'),*/
+/*url('/resources/front/font/Roboto_Medium.ttf') format('truetype');*/
+/*}*/
+
+/* CSS Document */
+html{-webkit-text-size-adjust:none}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, p, input, textarea, select, button, label, pre, table, th, td {margin:0; padding:0; }
+body, input, textarea, select, button {font-size:0.85em; line-height:1.25em; font-family:'나눔고딕','NanumGothic'; color:#616161; letter-spacing:0;}
+body {position:relative; background-color:#fff; *word-break:break-all; -ms-word-break:break-all; -webkit-text-size-adjust:none; font-size:0.85em;}
+img, fieldset, iframe {border:0 none;}
+img {-ms-interpolation-mode:bicubic !important;}
+header, footer, nav, aside, section, article{display:block;}
+ul, ol {list-style:none;}
+label, button {cursor:pointer;}
+input, select, button {vertical-align:middle;}
+table {border-collapse:collapse;}
+a{color:#666; text-decoration:none;}
+a:hover {color:#000; /* text-decoration:underline; */}
+a:focus {color:#000; /* text-decoration:underline; */}
+hr {display:none;}
+legend, caption, .blind {visibility:hidden;position:absolute;top:0;left:0;width:1px;height:1px;font-size:0;line-height:0}
+.hide {display:none;}
+
+img{margin:0; padding:0;}
+div{display:block;}
+body{height:100%;}
+tr, td, th{webkit-box-sizing: border-box; -moz-box-sizing: border-box;box-sizing: border-box;}
+select{padding-left:5px;}
+h1, h2{display:block;}
+
+#main{width:100%; margin:0 auto; background:url(/resources/front/img/bg/main_bg.png); background-repeat:no-repeat;}
+
+#warp{width:850px; margin:0 auto;}
+#warp{width:850px; margin:0 auto;}
+.warp_main{width:100% !important;}
+#warp .header02{height:340px; background-image:url(/resources/front/img/bg/sub_02_top_bg.png); background-repeat:no-repeat;}
+.warp01{height:1820px; background-image:url(/resources/front/img/bg/sub_01_bg.png); background-repeat:no-repeat;}
+.ebook{height:1000px; background-color:#fffef1;}
+.warp04{background-color:#ccf0f8;}
+.warp05{height:1000px; background-image:url(/resources/front/img/bg/sub_05_bg.png); background-repeat:no-repeat;}
+.warp06{height:1000px; background-color:#505766;}
+.warp08{height:1250px; background-image:url(/resources/front/img/bg/sub_08_bg.png); background-repeat:no-repeat;}
+.warp09{height:1710px; background-image:url(/resources/front/img/bg/sub_09_bg.png); background-repeat:no-repeat;}
+.warp10{height:940px; background-image:url(/resources/front/img/bg/sub_10_bg.png); background-repeat:no-repeat;}
+.warp12{height:953px; background-image:url(/resources/front/img/bg/sub_12_bg.png); background-repeat:no-repeat;}
+.warp13{background-image:url(/resources/front/img/bg/sub_13_bg.png); background-repeat:no-repeat;}
+.warp14{height:1100px; background-image:url(/resources/front/img/bg/sub_14_bg.png); background-repeat:no-repeat;}
+.warp16{height:1949px; background-image:url(/resources/front/img/bg/sub_16_bg.png); background-repeat:no-repeat;}
+.mail_warp{padding:20px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;box-sizing: border-box; letter-spacing:normal;}
+.warp17{background-image:url(/resources/front/img/bg/food_industry_bg.jpg); background-repeat:no-repeat;}
+.warp18{background-image:url(/resources/front/img/bg/global_food_bg.jpg); background-repeat:no-repeat;}
+.mail_a_warp{width:720px !important;}
+
+#warp #header{margin:0 auto;}
+#warp .header{margin:0 auto;}
+
+#contents{width:850px; margin:0 auto; padding-top:20px;}
+.contents{width:850px; margin:0 auto;}
+.main_contents{width:1080px !important; margin:0 auto; padding-top:20px;}
+.sub_contents{padding-top:0 !important;}
+
+.tag_rf{color:#ff2a2a;}
+.tag_gf{color:#96c023;}
+.tag_bf{color:#3657a7; margin-right:0 !important;}
+.tag_r{background-image:url(/resources/front/img/etc/tab_b_01.png); background-repeat:no-repeat;}
+.tag_g{background-image:url(/resources/front/img/etc/tab_b_02.png); background-repeat:no-repeat;}
+.tag_b{background-image:url(/resources/front/img/etc/tab_b_03.png); background-repeat:no-repeat;}

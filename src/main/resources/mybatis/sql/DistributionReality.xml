@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DistributionReality">
+
+    <select id="DistributionReality.selectDistributionRealitySeq" resultType="int">
+        SELECT NVL(MAX(SEQ),0) + 1 AS seq
+        FROM DISTRIBUTION_REALITY
+    </select>
+
+    <select id="DistributionReality.selectDistributionRealityList" parameterType="DistributionReality" resultType="DistributionReality">
+        SELECT
+            A.SEQ                   seq
+            ,A.YEAR                 year
+            ,A.TITLE                title
+            ,A.DISTRIBUTION         distribution
+            ,A.COST_DIRECTLY        costDirectly
+            ,A.COST_INDIRECT        costIndirect
+            ,A.COST_PROFIT          costProfit
+            ,A.STAGE_SHIPMENT       stageShipment
+            ,A.STAGE_WHOLESALE      stageWholesale
+            ,A.STAGE_RETAIL         stageRetail
+            ,A.CREATEID             creatid
+            ,A.CREATEDATE           creatdate
+            ,A.UPDATEID             updateid
+            ,A.UPDATEDATE           updatedate
+        FROM DISTRIBUTION_REALITY A
+        WHERE 1=1
+        AND A.DEL_YN = 'N'
+        <if test="seq != null">
+            AND A.SEQ = #{seq}
+        </if>
+        <if test="title != null">
+            AND A.TITLE LIKE CONCAT(CONCAT('%', #{title}), '%')
+        </if>
+        ORDER BY A.SEQ DESC
+    </select>
+
+    <select id="DistributionReality.selectDistributionRealityFrontList" resultType="DistributionReality">
+        <![CDATA[
+        SELECT
+            B.SEQ                   seq
+            ,B.YEAR                 year
+            ,B.TITLE                title
+            ,B.DISTRIBUTION         distribution
+            ,B.COST_DIRECTLY        costDirectly
+            ,B.COST_INDIRECT        costIndirect
+            ,B.COST_PROFIT          costProfit
+            ,B.STAGE_SHIPMENT       stageShipment
+            ,B.STAGE_WHOLESALE      stageWholesale
+            ,B.STAGE_RETAIL         stageRetail
+        FROM
+        (
+            SELECT
+                A.SEQ
+                ,A.YEAR
+                ,A.TITLE
+                ,A.DISTRIBUTION
+                ,A.COST_DIRECTLY
+                ,A.COST_INDIRECT
+                ,A.COST_PROFIT
+                ,A.STAGE_SHIPMENT
+                ,A.STAGE_WHOLESALE
+                ,A.STAGE_RETAIL
+            FROM DISTRIBUTION_REALITY A
+            WHERE A.DEL_YN <> 'Y'
+            ORDER BY A.SEQ DESC
+        ) B
+        WHERE ROWNUM <= 5
+        ]]>
+    </select>
+
+    <select id="DistributionReality.selectDistributionRealityView" parameterType="DistributionReality" resultType="DistributionReality">
+        <!-- 회원 정보 목록 조회 -->
+        SELECT
+        A.SEQ                   seq
+        ,A.YEAR                 year
+        ,A.TITLE                title
+        ,A.DISTRIBUTION         distribution
+        ,A.COST_DIRECTLY        costDirectly
+        ,A.COST_INDIRECT        costIndirect
+        ,A.COST_PROFIT          costProfit
+        ,A.STAGE_SHIPMENT       stageShipment
+        ,A.STAGE_WHOLESALE      stageWholesale
+        ,A.STAGE_RETAIL         stageRetail
+        ,A.CREATEID             creatid
+        ,A.CREATEDATE           creatdate
+        ,A.UPDATEID             updateid
+        ,A.UPDATEDATE           updatedate
+        FROM DISTRIBUTION_REALITY A
+        WHERE 1=1
+        <if test="seq != null and seq != 0">
+            AND A.SEQ = #{seq}
+        </if>
+        ORDER BY A.SEQ DESC
+    </select>
+
+    <insert id="DistributionReality.insertDistributionReality" parameterType="DistributionReality">
+        INSERT INTO DISTRIBUTION_REALITY
+        (
+            SEQ
+            ,YEAR
+            ,TITLE
+            ,DISTRIBUTION
+            ,COST_DIRECTLY
+            ,COST_INDIRECT
+            ,COST_PROFIT
+            ,STAGE_SHIPMENT
+            ,STAGE_WHOLESALE
+            ,STAGE_RETAIL
+            ,DEL_YN
+            ,CREATEID
+            ,CREATEDATE
+        ) VALUES
+        (
+            #{seq}
+            ,#{year}
+            ,#{title}
+            ,#{distribution}
+            ,#{costDirectly}
+            ,#{costIndirect}
+            ,#{costProfit}
+            ,#{stageShipment}
+            ,#{stageWholesale}
+            ,#{stageRetail}
+            ,'N'
+            ,#{createid}
+            ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="DistributionReality.updateDistributionReality" parameterType="DistributionReality">
+        UPDATE DISTRIBUTION_REALITY SET
+            updatedate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') ,
+            updateid = #{updateid} ,
+        <trim suffixOverrides=",">
+            <if test="title != null">TITLE = #{title},</if>
+            <if test="year != null">YEAR = #{year},</if>
+            <if test="distribution != null">DISTRIBUTION = #{distribution},</if>
+            <if test="costDirectly != null">COST_DIRECTLY = #{costDirectly},</if>
+            <if test="costIndirect != null">COST_INDIRECT = #{costIndirect},</if>
+            <if test="costProfit != null">COST_PROFIT = #{costProfit},</if>
+            <if test="stageShipment != null">STAGE_SHIPMENT = #{stageShipment},</if>
+            <if test="stageWholesale != null">STAGE_WHOLESALE = #{stageWholesale},</if>
+            <if test="stageRetail != null">STAGE_RETAIL = #{stageRetail},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="seq != null"> SEQ = #{seq}</if>
+        </trim>
+    </update>
+
+    <update id="DistributionReality.deleteDistributionReality" parameterType="DistributionReality">
+        UPDATE DISTRIBUTION_REALITY SET
+        updatedate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        ,updateid = #{updateid}
+        ,del_yn = 'Y'
+        WHERE SEQ = #{seq}
+    </update>
+
+    <select id="DistributionReality.selectDistributionRealityItemList" parameterType="DistributionReality" resultType="DistributionReality">
+        SELECT
+        A.SEQ                   seq
+        ,A.MAIN_SEQ             mainSeq
+        ,A.TITLE                title
+        ,A.FILE_IMG             fileImg
+        ,A.CREATEID             createid
+        ,A.CREATEDATE           createdate
+        ,A.UPDATEID             updateid
+        ,A.UPDATEDATE           updatedate
+        FROM DISTRIBUTION_REALITY_ITEM A
+        WHERE 1=1
+        <if test="seq != null and seq != 0">
+            AND A.SEQ = #{seq}
+        </if>
+        <if test="mainSeq != null">
+            AND A.MAIN_SEQ = #{mainSeq}
+        </if>
+        ORDER BY A.SEQ DESC
+    </select>
+
+    <insert id="DistributionReality.insertDistributionRealityItem" parameterType="DistributionReality">
+        INSERT INTO DISTRIBUTION_REALITY_ITEM
+        (
+            MAIN_SEQ
+            ,TITLE
+            ,FILE_IMG
+            ,CREATEID
+            ,CREATEDATE
+        ) VALUES
+        (
+            #{mainSeq}
+            ,#{title}
+            ,#{fileImg}
+            ,#{createid}
+            ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="DistributionReality.updateDistributionRealityItem" parameterType="DistributionReality">
+        UPDATE DISTRIBUTION_REALITY_ITEM SET
+        updatedate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') ,
+        updateid = #{updateid} ,
+        <trim suffixOverrides=",">
+            <if test="title != null">TITLE = #{title},</if>
+            <if test="fileImg != null">FILE_IMG = #{fileImg},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="seq != null"> SEQ = #{seq}</if>
+        </trim>
+    </update>
+
+    <delete id="DistributionReality.deleteDistributionRealityItem" parameterType="DistributionReality">
+        DELETE FROM DISTRIBUTION_REALITY_ITEM WHERE SEQ = #{seq}
+    </delete>
+</mapper>

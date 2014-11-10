@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FarmDealTrend">
+    <select id="FarmDealTrend.selectFarmDealTrendList" parameterType="FarmDealTrend" resultType="FarmDealTrend">
+        SELECT
+            A.ITEM_CODE             itemCode
+            ,B.NAME                 itemName
+            ,A.STANDARD_DATE        standardDate
+            ,A.STANDARD_PRICE       standardPrice
+            ,A.DANGER               danger
+            ,(SELECT DESCRIPTION FROM COMMON_CODE WHERE A.DANGER=COMMON_CODE AND COMMON_SET='FARMDEALTREND') dangerName
+            ,A.YEAR_PRICE           yearPrice
+            ,A.CREATEID             createid
+            ,A.CREATEDATE           createdate
+            ,A.UPDATEID             updateid
+            ,A.UPDATEDATE           updatedate
+        FROM FARM_DEAL_TREND A INNER JOIN ITEM B ON A.ITEM_CODE=B.ITEM_CODE
+        WHERE 1=1
+        AND B.GROUP_CODE = 'E'
+        <if test="standardDate != null">
+            AND A.STANDARD_DATE = #{standardDate}
+        </if>
+        ORDER BY A.STANDARD_DATE DESC, A.ITEM_CODE ASC
+    </select>
+
+    <select id="FarmDealTrend.selectFarmDealTrendTermList" resultType="FarmDealTrend">
+        <![CDATA[
+        SELECT
+            TO_CHAR(TO_DATE(STANDARD_DATE,'YYYY/MM/DD'), 'mm/dd')        standardDate
+            ,C.STANDARD_PRICE       standardPrice
+            ,TRIM(TO_CHAR((C.STANDARD_PRICE/#{avgPrice} * 100 ),'999'))       avgPrice
+        FROM FARM_DEAL_TREND C
+        WHERE STANDARD_DATE IN (
+            SELECT
+              B.STANDARD_DATE
+            FROM
+                (
+                    SELECT
+                        A.STANDARD_DATE
+                    FROM FARM_DEAL_TREND A
+                    WHERE A.STANDARD_DATE < #{standardDate}
+                    GROUP BY A.STANDARD_DATE
+                    ORDER BY A.STANDARD_DATE DESC
+                ) B
+            WHERE ROWNUM <= 5
+        )
+        AND C.ITEM_CODE = #{itemCode}
+        ORDER BY STANDARD_DATE desc
+        ]]>
+    </select>
+
+    <select id="FarmDealTrend.selectFarmDealTrendMaxPrice" resultType="int">
+        <![CDATA[
+        SELECT
+            MAX(TO_NUMBER(C.STANDARD_PRICE))   maxPrice
+        FROM FARM_DEAL_TREND C
+        WHERE STANDARD_DATE IN (
+            SELECT
+              B.STANDARD_DATE
+            FROM
+                (
+                    SELECT
+                        A.STANDARD_DATE
+                    FROM FARM_DEAL_TREND A
+                    WHERE A.STANDARD_DATE < #{standardDate}
+                    GROUP BY A.STANDARD_DATE
+                    ORDER BY A.STANDARD_DATE DESC
+                ) B
+            WHERE ROWNUM <= 5
+        )
+        AND C.ITEM_CODE = #{itemCode}
+        ORDER BY STANDARD_DATE
+        ]]>
+    </select>
+
+    <select id="FarmDealTrend.selectFarmDealTrendTop" resultType="FarmDealTrend">
+        <![CDATA[
+        SELECT
+            B.STANDARD_DATE          standardDate
+        FROM
+        (
+            SELECT
+                A.STANDARD_DATE
+            FROM FARM_DEAL_TREND A
+            GROUP BY A.STANDARD_DATE
+            ORDER BY A.STANDARD_DATE DESC
+        ) B
+        WHERE ROWNUM = 1
+        ]]>
+    </select>
+
+    <select id="FarmDealTrend.checkFarmDealTrend"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM FARM_DEAL_TREND
+        WHERE ITEM_CODE = #{itemCode}
+        AND STANDARD_DATE = #{standardDate}
+    </select>
+
+    <insert id="FarmDealTrend.insertFarmDealTrend" parameterType="FarmDealTrend">
+        INSERT INTO FARM_DEAL_TREND
+        (
+        ITEM_CODE
+        ,STANDARD_DATE
+        ,STANDARD_PRICE
+        ,DANGER
+        ,YEAR_PRICE
+        ,CREATEID
+        ,CREATEDATE
+        ) VALUES
+        (
+        #{itemCode}
+        ,#{standardDate}
+        ,#{standardPrice}
+        ,#{danger}
+        ,#{yearPrice}
+        ,#{createid}
+        ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        )
+    </insert>
+
+    <update id="FarmDealTrend.updateFarmDealTrend" parameterType="FarmDealTrend">
+        UPDATE FARM_DEAL_TREND SET
+        updatedate = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS'),
+        updateid = #{updateid} ,
+        <trim suffixOverrides=",">
+            <if test="standardPrice != null">STANDARD_PRICE = #{standardPrice},</if>
+            <if test="danger != null">DANGER = #{danger},</if>
+            <if test="yearPrice != null">YEAR_PRICE = #{yearPrice},</if>
+        </trim>
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="itemCode != null">ITEM_CODE = #{itemCode}</if>
+            <if test="standardDate != null">AND STANDARD_DATE = #{standardDate}</if>
+        </trim>
+    </update>
+</mapper>
