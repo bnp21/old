@@ -53,7 +53,7 @@ public class FileUploadController {
         FileOutputStream outputStream = null;
 
         String filePath = "C:\\/" + excel.getFile().getOriginalFilename();
-        System.out.println("filePath==>"+filePath);
+        //System.out.println("filePath==>"+filePath);
 
         outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(excel.getFile().getFileItem().get());
@@ -70,9 +70,9 @@ public class FileUploadController {
         while (rowIterator.hasNext())
         {
             Row row = rowIterator.next();
-            System.out.println("row.getRowNum()==>"+row.getRowNum());
+            //System.out.println("row.getRowNum()==>"+row.getRowNum());
             if(row.getRowNum()==0){
-                System.out.println("====Excel to DB Insert====");
+                //System.out.println("====Excel to DB Insert====");
             }else{
 
                 if(map.containsKey(row.getCell(1).getStringCellValue())){

@@ -92,6 +92,32 @@ public class HomeController {
             }else{
                 if( !session.getAttribute("goPC").equals("Y") ){
                     return "redirect:/mobile/index";
+                }else{
+                    /*at센터 최근소식*/
+                    Atnews atnews = new Atnews();
+
+                    List<Atnews> atnewsList = atnewsService.selectAtnewsList(atnews);
+
+                    model.addAttribute("atnewsList", atnewsList);
+
+                    /*유통교육원 최근소식*/
+                    Education education = new Education();
+
+                    List<Education> educationList = educationService.selectEducationList(education);
+
+                    model.addAttribute("educationList", educationList);
+
+                    /*메인 노출데이터*/
+                    Main main = new Main();
+                    List<Main> mainList = mainService.selectMainList(main);
+                    //List<Menu> mainOutList = menuService.selectOutMenuList();
+
+    //            for (int i = 0; i < mainList.size(); i++) {
+    //                System.out.println(i+"==>"+mainList.get(i).getMenuname());
+    //            }
+                    model.addAttribute("mainList", mainList);
+                    model.addAttribute("mainListSize", mainList.size());
+                    //model.addAttribute("menuList", mainOutList);
                 }
             }
         }else {
@@ -133,7 +159,7 @@ public class HomeController {
             statistics.setPageGbn("A"); //메인:A,모바일메인:B,생생정보:C,원본:D
 
             int cnt=mainService.updateStatistics(statistics);
-            System.out.println("웹메인 cnt==>"+cnt);
+            //System.out.println("웹메인 cnt==>"+cnt);
         /************** 통계정보 입력  End **************/
 
         return "index";
@@ -149,15 +175,15 @@ public class HomeController {
         String ip = request.getRemoteAddr();
         int menuId = 0;
 
-        System.out.println("ip==>"+ip);
-        System.out.println("url==>"+url);
-        System.out.println("gbn==>"+gbn);
+        //System.out.println("ip==>"+ip);
+        //System.out.println("url==>"+url);
+        //System.out.println("gbn==>"+gbn);
 
         if(url!=null){
 
             if(url.equals("1") || url.equals("5") || url.equals("14")){  //외부링크일 경우:  사이버거래소[1], 뉴스레터[5], e-book[14]
                 menuId=Integer.parseInt(url);
-                System.out.println("menuId==>" + menuId);
+                //System.out.println("menuId==>" + menuId);
             }else {
 //                Main main = new Main();
 //                main.setUrl(url);
@@ -181,7 +207,7 @@ public class HomeController {
             if(url.equals("food-info")){menuId=15;}  //KATI. aT Global Food Info
             if(url.equals("flower_volume")){menuId=16;}  //화훼공판장, 경매시세
 
-                System.out.println("menuId==>" + menuId);
+                //System.out.println("menuId==>" + menuId);
 
             }
 
@@ -194,7 +220,7 @@ public class HomeController {
         statistics.setPageGbn(gbn); //메인:A,모바일메인:B,생생정보:C,원본:D
 
         int cnt=mainService.updateStatistics(statistics);
-        System.out.println("생생정보 cnt==>"+cnt);
+        //System.out.println("생생정보 cnt==>"+cnt);
         /************** 통계정보 입력  End **************/
         return cnt;
     }
@@ -209,14 +235,14 @@ public class HomeController {
         String ip = request.getRemoteAddr();
         int menuId = 0;
 
-        System.out.println("ip==>"+ip);
-        System.out.println("id==>"+id);
-        System.out.println("gbn==>"+gbn);
+        //System.out.println("ip==>"+ip);
+        //System.out.println("id==>"+id);
+        //System.out.println("gbn==>"+gbn);
 
         if(id!=null){
             menuId=Integer.parseInt(id);
         }
-        System.out.println("menuId==>"+menuId);
+        //System.out.println("menuId==>"+menuId);
 
         Statistics statistics=new Statistics();
 
@@ -225,7 +251,7 @@ public class HomeController {
         statistics.setPageGbn(gbn); //메인:A,모바일메인:B,생생정보:C,원본:D
 
         int cnt=mainService.updateStatistics(statistics);
-        System.out.println("원본 cnt==>"+cnt);
+        //System.out.println("원본 cnt==>"+cnt);
         /************** 통계정보 입력  End **************/
         return cnt;
     }
@@ -304,24 +330,13 @@ public class HomeController {
             return processedFoodsList;
         }else if( seq.equals("5") ){//KATI, 뉴스레터
 
-            LOGGER.info("getMainData seq ==>", seq);
+            NewsLetter newsLetter=new NewsLetter();
+            newsLetter.setViewYn("Y");
 
-            /*메인 노출데이터*/
-            Menu menu = new Menu();
-            menu.setId(Integer.parseInt(seq));
-            List<Menu> newLetterList = menuService.selectMenuList(menu);
+            List<NewsLetter> newsLetterList = exportWeatherService.selectNewsLetterList(newsLetter);
 
-            for (int i = 0; i <newLetterList.size() ; i++) {
-                System.out.println(i+"= id =>"+newLetterList.get(i).getId());
-                System.out.println(i+"= name =>"+newLetterList.get(i).getName());
-                System.out.println(i+"= url =>"+newLetterList.get(i).getUrl());
-                System.out.println(i+"= Thumbnail =>"+newLetterList.get(i).getThumbnailName());
-                System.out.println(i+"= title =>"+newLetterList.get(i).getTitle());
-                System.out.println(i+"= foorterul =>"+newLetterList.get(i).getFooterurl());
-
-            }
-            model.addAttribute("newLetterList", newLetterList);
-            return newLetterList;
+            model.addAttribute("newsLetterList", newsLetterList);
+            return newsLetterList;
 
         }else if( seq.equals("6") ){//KATI, 농수산식품수출기상도
             ExportWeather exportWeather = new ExportWeather();
@@ -369,9 +384,13 @@ public class HomeController {
                 flowerVolumeNType.setGroupType("FN");
                 flowerVolumeList1 = flowerService.selectFlowerVolumeList(flowerVolumeNType);
                 //flowerVolumeList = flowerVolumeList1;
-                if(flowerVolumeList1.size()>0) {
+                System.out.println("flowerVolumeList1==>"+flowerVolumeList1);
+                System.out.println("flowerVolumeList1.size==>"+flowerVolumeList1.size());
+                if(flowerVolumeList1!=null) {
+                    System.out.println("절화[N]==> 데이터있음");
                     flowerVolumeList.add(flowerVolumeList1.get(0));
                 }else{
+                    System.out.println("절화[N]==> 데이터없음");
                     FlowerVolume flowerVolumeVo=new FlowerVolume();
                     flowerVolumeVo.setItemCode("F31");
                     flowerVolumeVo.setItemName("-");
@@ -389,10 +408,14 @@ public class HomeController {
             if( flowerVolumeYType != null ){
                 flowerVolumeYType.setGroupType("FY");
                 flowerVolumeList2 = flowerService.selectFlowerVolumeList(flowerVolumeYType);
-                if(flowerVolumeList2.size()>0) {
+                System.out.println("flowerVolumeList2==>"+flowerVolumeList2);
+                System.out.println("flowerVolumeList2.size==>"+flowerVolumeList2.size());
+                if(flowerVolumeList2!=null) {
+                    System.out.println("난[Y]==> 데이터있음");
                     //flowerVolumeList.set(1, flowerVolumeList2.get(0));
                     flowerVolumeList.add(flowerVolumeList2.get(0));
                 }else{
+                    System.out.println("난[Y]==> 데이터없음");
                     FlowerVolume flowerVolumeVo=new FlowerVolume();
                     flowerVolumeVo.setItemCode("F32");
                     flowerVolumeVo.setItemName("-");
@@ -411,10 +434,15 @@ public class HomeController {
                 flowerVolumeCType.setGroupType("FC");
                 flowerVolumeList3 = flowerService.selectFlowerVolumeList(flowerVolumeCType);
 
-                if(flowerVolumeList3.size()>0) {
+                System.out.println("flowerVolumeList3==>"+flowerVolumeList3);
+                System.out.println("flowerVolumeList3.size==>"+flowerVolumeList3.size());
+
+                if(flowerVolumeList3!=null) {
+                    System.out.println("관엽[C]==> 데이터있음");
                     //flowerVolumeList.set(2,flowerVolumeList3.get(0));
                     flowerVolumeList.add(flowerVolumeList3.get(0));
                 }else{
+                    System.out.println("관엽[C]==> 데이터없음");
                     FlowerVolume flowerVolumeVo=new FlowerVolume();
                     flowerVolumeVo.setItemCode("F33");
                     flowerVolumeVo.setItemName("-");
@@ -463,32 +491,32 @@ public class HomeController {
 
     @RequestMapping(value = {"mobile/goPC"}, method = RequestMethod.GET)
     public String mobilePcIndex(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws SerialException, IOException{
-//        HttpSession session1 = request.getSession(true);
-//        session1.setAttribute("goPC","Y");
-//        session1.setMaxInactiveInterval(-1);
+        HttpSession session1 = request.getSession(true);
+        session1.setAttribute("goPC","Y");
+        session1.setMaxInactiveInterval(-1);
 
-        /*at센터 최근소식*/
-        Atnews atnews = new Atnews();
-
-        List<Atnews> atnewsList = atnewsService.selectAtnewsList(atnews);
-
-        model.addAttribute("atnewsList", atnewsList);
-
-            /*유통교육원 최근소식*/
-        Education education = new Education();
-
-        List<Education> educationList = educationService.selectEducationList(education);
-
-        model.addAttribute("educationList", educationList);
-
-            /*메인 노출데이터*/
-        Main main = new Main();
-        List<Main> mainList = mainService.selectMainList(main);
-        //List<Menu> mainOutList = menuService.selectOutMenuList();
-
-        model.addAttribute("mainList", mainList);
-        model.addAttribute("mainListSize", mainList.size());
-        //model.addAttribute("menuList", mainOutList);
+//        /*at센터 최근소식*/
+//        Atnews atnews = new Atnews();
+//
+//        List<Atnews> atnewsList = atnewsService.selectAtnewsList(atnews);
+//
+//        model.addAttribute("atnewsList", atnewsList);
+//
+//            /*유통교육원 최근소식*/
+//        Education education = new Education();
+//
+//        List<Education> educationList = educationService.selectEducationList(education);
+//
+//        model.addAttribute("educationList", educationList);
+//
+//            /*메인 노출데이터*/
+//        Main main = new Main();
+//        List<Main> mainList = mainService.selectMainList(main);
+//        //List<Menu> mainOutList = menuService.selectOutMenuList();
+//
+//        model.addAttribute("mainList", mainList);
+//        model.addAttribute("mainListSize", mainList.size());
+//        //model.addAttribute("menuList", mainOutList);
 
         /************** 통계정보 입력 Start **************/
         String ip = request.getRemoteAddr();
@@ -500,11 +528,11 @@ public class HomeController {
         statistics.setPageGbn("A"); //메인:A,모바일메인:B,생생정보:C,원본:D
 
         int cnt=mainService.updateStatistics(statistics);
-        System.out.println("웹메인 cnt==>"+cnt);
+        //System.out.println("웹메인 cnt==>"+cnt);
         /************** 통계정보 입력  End **************/
 
-        //return "redirect:/index";
-        return "index";
+        return "redirect:/index";
+        //return "index";
     }
 
     @RequestMapping(value = "mobile/{type}", method = RequestMethod.GET)

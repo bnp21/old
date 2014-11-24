@@ -38,7 +38,9 @@
                                     <div class="col-md-6">
                                         &nbsp;&nbsp;&nbsp;
                                         <button type="button" class="btn btn-success" onclick="search(0)">일 간</button>&nbsp;
+                                        <!--
                                         <button type="button" class="btn btn-success" onclick="search(1)">주 간</button>&nbsp;
+                                        -->
                                         <button type="button" class="btn btn-success" onclick="search(2)">월 간</button>&nbsp;
                                         <button type="button" class="btn btn-success" onclick="search(3)">년 간</button>&nbsp;
                                     </div>
@@ -85,6 +87,7 @@
     </div><!--end .row -->
     <!-- END HORIZONTAL FORM -->
 
+
     <!-- START DATATABLE 1 -->
     <div class="row">
         <!-- START HORIZONTAL BORDERED & BANDED FORM -->
@@ -100,21 +103,33 @@
                         <tr align="center">
                             <th align="center">No.</th>
                             <th align="center">생생정보명</th>
-                            <th align="center">방문자수</th>
-                            <th align="center">방문횟수</th>
-                            <th align="center">페이지뷰</th>
+                            <th align="center">방문자수(명)</th>
+                            <th align="center">방문횟수(회)</th>
+                            <th align="center">페이지뷰(회)</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <c:set var="totVisitantCnt" value="0" />
+                        <c:set var="totVisitCnt" value="0" />
+                        <c:set var="totPageCnt" value="0" />
                         <c:forEach items="${statisticsList}" var="list">
                         <tr>
                             <td align="center">${list.seq}</td>
                             <td>${list.menuNm}</td>
-                            <td align="right">${list.visitantCnt} 명</td>
-                            <td align="right">${list.visitCnt} 회</td>
-                            <td align="right">${list.pageCnt} 회</td>
+                            <td align="right">${list.visitantCnt}</td>
+                            <td align="right">${list.visitCnt}</td>
+                            <td align="right">${list.pageCnt}</td>
                         </tr>
+                            <c:set var="totVisitantCnt" value="${totVisitantCnt + list.visitantCnt}" />
+                            <c:set var="totVisitCnt" value="${totVisitCnt + list.visitCnt}" />
+                            <c:set var="totPageCnt" value="${totPageCnt + list.pageCnt}" />
                         </c:forEach>
+                        <tr>
+                            <td align="center" colspan="2">합 계</td>
+                            <td align="right">${totVisitantCnt}</td>
+                            <td align="right">${totVisitCnt}</td>
+                            <td align="right">${totPageCnt}</td>
+                        </tr>
                         </tbody>
                     </table>
                     <div class="text-left">

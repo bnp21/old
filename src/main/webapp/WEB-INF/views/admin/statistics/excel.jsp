@@ -12,8 +12,6 @@
 
 <%
 
-     String fileNm="통계";
-
     response.setContentType("application/vnd.ms-excel; charset=euc-kr");
     response.addHeader("Content-Disposition","attachment; filename=statistics.xls");
     response.setHeader("Cache-Control", "max-age=10");
@@ -23,27 +21,40 @@
 
 <html>
     <head>
-
+        <!-- 운영에서 한글깨져서 추가함 -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
         <table border="1" cellspacing="0" cellpadding="0">
             <tr align="center">
-                <th align="center" bgcolor="#7fff00">No.</th>
-                <th align="center" bgcolor="#7fff00">생생정보명</th>
-                <th align="center" bgcolor="#7fff00">방문자수</th>
-                <th align="center" bgcolor="#7fff00">방문횟수</th>
-                <th align="center" bgcolor="#7fff00">페이지뷰</th>
+                <td align="center" bgcolor="#7fff00">No.</td>
+                <td align="center" bgcolor="#7fff00">생생정보명</td>
+                <td align="center" bgcolor="#7fff00">방문자수(명)</td>
+                <td align="center" bgcolor="#7fff00">방문횟수(회)</td>
+                <td align="center" bgcolor="#7fff00">페이지뷰(회)</td>
             </tr>
 
-            <c:forEach items="${statisticsList}" var="list" varStatus="status">
+            <c:set var="totVisitantCnt" value="0" />
+            <c:set var="totVisitCnt" value="0" />
+            <c:set var="totPageCnt" value="0" />
+            <c:forEach items="${statisticsList}" var="list">
                 <tr>
                     <td align="center">${list.seq}</td>
                     <td>${list.menuNm}</td>
-                    <td align="right">${list.visitantCnt} 명</td>
-                    <td align="right">${list.visitCnt} 회</td>
-                    <td align="right">${list.pageCnt} 회</td>
+                    <td align="right">${list.visitantCnt}</td>
+                    <td align="right">${list.visitCnt}</td>
+                    <td align="right">${list.pageCnt}</td>
                 </tr>
+                <c:set var="totVisitantCnt" value="${totVisitantCnt + list.visitantCnt}" />
+                <c:set var="totVisitCnt" value="${totVisitCnt + list.visitCnt}" />
+                <c:set var="totPageCnt" value="${totPageCnt + list.pageCnt}" />
             </c:forEach>
+            <tr>
+                <td align="center" colspan="2">합 계</td>
+                <td align="right">${totVisitantCnt}</td>
+                <td align="right">${totVisitCnt}</td>
+                <td align="right">${totPageCnt}</td>
+            </tr>
 
         </table>
     </body>

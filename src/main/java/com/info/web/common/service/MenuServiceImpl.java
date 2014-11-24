@@ -40,4 +40,8 @@ public class MenuServiceImpl implements MenuService {
     public int updateMenu(Menu menu) {
         return menuDao.updateMenu(menu);
     }
+
+    public int updateMenuNewLetter(Menu menu) {
+        return menuDao.updateMenuNewLetter(menu);
+    }
 }

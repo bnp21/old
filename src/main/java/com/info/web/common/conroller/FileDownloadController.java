@@ -44,8 +44,8 @@ public class FileDownloadController {
         //String fileGbn=(String)request.getParameter("fileGbn");
         // 서버에 실제 저장된 파일명
 
-        System.out.println("fileGbn==>"+fileGbn);
-        System.out.println("upload_path==>"+upload_path);
+        //System.out.println("fileGbn==>"+fileGbn);
+        //System.out.println("upload_path==>"+upload_path);
 
         if(fileGbn.equals("01")){
             filename="farm-dealTrend.xlsx"; //주요농산물일일거래동향
@@ -148,12 +148,12 @@ public class FileDownloadController {
         //개발서버시
         //String upload_path = "D:/workspace/old/src/main/webapp/resources/front/upload/";
 
-        System.out.println("upload_path ==>" + upload_path+requestedFile);
+        //System.out.println("upload_path ==>" + upload_path+requestedFile);
 
         File uFile = new File(upload_path, requestedFile);
         int fSize = (int) uFile.length();
 
-        System.out.println("fSize : " + fSize);
+        //System.out.println("fSize : " + fSize);
 
         if (fSize > 0) {
 

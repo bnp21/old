@@ -18,4 +18,7 @@ public interface MenuDao {
     public int updateMenu(Menu menu);
 
     public List<Menu> selectOutMenuList();
+
+    /*메뉴 데이터 수정*/
+    public int updateMenuNewLetter(Menu menu);
 }

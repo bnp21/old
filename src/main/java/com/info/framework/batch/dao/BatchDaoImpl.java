@@ -27,6 +27,16 @@ public class BatchDaoImpl implements BatchDao {
         return sqlSessionTemplate.selectList("Batch.selectBatchList");
     }
 
+    public List<Batch> getBatchData001List(Batch batch) {
+        return sqlSessionTemplate.selectList("Batch.getBatchData001List",batch);
+    }
+    public List<Batch> getBatchData001CList(Batch batch) {
+        return sqlSessionTemplate.selectList("Batch.getBatchData001CList",batch);
+    }
+    public List<Batch> getBatchData001YList(Batch batch) {
+        return sqlSessionTemplate.selectList("Batch.getBatchData001YList",batch);
+    }
+
     public int deleteBatch001(){
         return sqlSessionTemplate.delete("Batch.deleteBatch001");
     }
@@ -56,6 +66,13 @@ public class BatchDaoImpl implements BatchDao {
     public int insertBatch002(){
         return sqlSessionTemplate.insert("Batch.insertBatch002");
     }
+    public int deleteBatch002_JP(){
+        return sqlSessionTemplate.delete("Batch.deleteBatch002_JP");
+    }
+
+    public int insertBatch002_JP(){
+        return sqlSessionTemplate.insert("Batch.insertBatch002_JP");
+    }
 
     public int insertBatch003(){
         return sqlSessionTemplate.insert("Batch.insertBatch003");
@@ -82,36 +99,41 @@ public class BatchDaoImpl implements BatchDao {
     }
 
     //수출기상도
-    public void deleteBath006(Price price){
-        sqlSessionTemplate.delete("Batch.deleteBath006", price);
+    public Batch getBatchData006(Batch batch){
+        return sqlSessionTemplate.selectOne("Batch.getBatchData006", batch);
     }
 
-    public void insertBatch006(){
-        sqlSessionTemplate.insert("Batch.insertBatch006");
+    public void insertBatch006(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch006", batch);
     }
 
-    public void insertBatch008(){
-        sqlSessionTemplate.insert("Batch.insertBatch008");
+    public void insertBatch008(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch008", batch);
     }
 
-    public void insertBatch009(){
-        sqlSessionTemplate.insert("Batch.insertBatch009");
+    public void insertBatch009(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch009", batch);
     }
 
-    public void insertBatch009_01(){
-        sqlSessionTemplate.insert("Batch.insertBatch009_01");
+    public void insertBatch009_01(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch009_01", batch);
     }
 
-    public void insertBatch009_02(){
-        sqlSessionTemplate.insert("Batch.insertBatch009_02");
+    public void insertBatch009_02(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch009_02", batch);
     }
 
-    public void insertBatch010(){
-        sqlSessionTemplate.insert("Batch.insertBatch010");
+    public void insertBatch010(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch010", batch);
     }
 
-    public void insertBatch011(){
-        sqlSessionTemplate.insert("Batch.insertBatch011");
+    public void insertBatch011(Batch batch){
+        sqlSessionTemplate.insert("Batch.insertBatch011", batch);
+    }
+
+    //뉴스래터
+    public void insertBatch007(NewsLetter newsLetter){
+        sqlSessionTemplate.insert("Batch.insertBatch007",newsLetter);
     }
     //메인화면에서 수정된거 먼저가져오도록 업데이트 날짜 셋팅함
     public void updateMenu(Batch batch){

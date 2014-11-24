@@ -2,6 +2,7 @@ package com.info.web.exportweather.dao;
 
 import com.info.web.domain.ExportWeather;
 import com.info.web.domain.FarmDealTrend;
+import com.info.web.domain.NewsLetter;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,4 +75,14 @@ public class ExportWeatherDaoImpl implements ExportWeatherDao {
     public int updateExportWeather(ExportWeather exportWeather) {
         return sqlSessionTemplate.update("ExportWeather.updateExportWeather", exportWeather);
     }
+
+    public List<NewsLetter> selectNewsLetterList(NewsLetter newsLetter) {
+        return sqlSessionTemplate.selectList("ExportWeather.selectNewsLetterList", newsLetter);
+    }
+
+
+    public int updateNewsLetter(NewsLetter newsLetter) {
+        return sqlSessionTemplate.update("ExportWeather.updateNewsLetter", newsLetter);
+    }
+
 }

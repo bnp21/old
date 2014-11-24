@@ -41,6 +41,25 @@ public interface MainDao {
      */
     public List<Statistics> selectStatisticsList(Statistics statistics);
 
+    /**
+     * 통계 데이터 다운로드 목록 조회
+     *
+     * @return 통계 목록
+     */
+    public List<Statistics> selectStatisticsDateDownloadList(Statistics statistics);
+    /**
+     * 통계 데이터 메뉴 목록 조회
+     *
+     * @return 통계 목록
+     */
+    public List<Statistics> selectStatisticsMenuList(Statistics statistics);
+    /**
+     * 통계 데이터 시간 목록 조회
+     *
+     * @return 통계 목록
+     */
+    public List<Statistics> selectStatisticsDateList(Statistics statistics);
+
     /*통계 데이터 수정하기*/
     public int updateStatistics(Statistics statistics);
 

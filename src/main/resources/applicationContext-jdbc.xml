@@ -18,13 +18,13 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:properties/jdbc/jdbc.properties</value>
+                <value>classpath:/properties/jdbc/jdbc.properties</value>
             </list>
         </property>
     </bean>
 
-
-     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <!--  oracle DataSource Start -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <!-- 추후 패스워드 암호화(dataSource / Properties) 처리해야 함. -->
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
         <property name="url" value="${jdbc.url}"/>
@@ -33,7 +33,6 @@
         <property name="validationQuery" value="select 1 from dual"/>
         <property name="connectionProperties" value="autoReconnect=true;"/>
     </bean>
-
 
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
@@ -50,12 +49,46 @@
         </property>
     </bean>
 
-
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
+    <!--  oracle DataSource End -->
+
+    <!-- ########## mysql 추가함 20141110 DataSource Start ##################
+    <bean id="dataSource2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName2}"/>
+        <property name="url" value="${jdbc.url2}"/>
+        <property name="username" value="${jdbc.username2}"/>
+        <property name="password" value="${jdbc.password2}"/>
+        <property name="validationQuery" value="select 1 from dual"/>
+        <property name="connectionProperties" value="autoReconnect=true;"/>
+    </bean>
+
+
+    <bean id="sqlSession2" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg index="0" ref="sqlSessionFactory2"></constructor-arg>
+    </bean>
+
+    <bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"></property>
+    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+    <property name="mapperLocations" value="classpath*:mybatis/sql/*.xml"></property>
+
+    <property name="transactionFactory">
+        <bean class="org.mybatis.spring.transaction.SpringManagedTransactionFactory"></bean>
+    </property>
+    </bean>
+
+
+    <bean id="transactionManager2" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource2" />
+    </bean>
+
+
+    <tx:annotation-driven transaction-manager="transactionManager2"/>
+    -->
+    <!-- ########## mysql 추가함 20141110 DataSource End ################## -->
 </beans>

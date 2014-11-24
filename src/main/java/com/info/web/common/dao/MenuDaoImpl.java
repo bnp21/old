@@ -39,5 +39,9 @@ public class MenuDaoImpl implements MenuDao {
         return sqlSessionTemplate.update("Menu.updateMenu", menu);
     }
 
+    public int updateMenuNewLetter(Menu menu) {
+        return sqlSessionTemplate.update("Menu.updateMenuNewLetter", menu);
+    }
+
 
 }

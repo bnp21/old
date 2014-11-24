@@ -148,7 +148,7 @@ public class KatisAdminController {
 
         String filePath = upload_path+"excel/"+farmDealTrend.getFile().getOriginalFilename();
         //version issue environment.getProperty("upload.filepath")+"excel/" + farmDealTrend.getFile().getOriginalFilename();
-        System.out.println("filePath==>"+filePath);
+        //System.out.println("filePath==>"+filePath);
 
         outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(farmDealTrend.getFile().getFileItem().get());
@@ -636,6 +636,10 @@ public class KatisAdminController {
         List<Menu> menuList = menuService.selectMenuList(menu);
         model.addAttribute("menuList", menuList);
 
+        NewsLetter newsLetter=new NewsLetter();
+        List<NewsLetter> newsLetterList = exportWeatherService.selectNewsLetterList(newsLetter);
+        model.addAttribute("newsLetterList", newsLetterList);
+
         return "admin/katis/news-letter/index";
     }
 
@@ -665,4 +669,65 @@ public class KatisAdminController {
 
         return "redirect:/admin/katis/news-letter";
     }
+
+    /*뉴스레터 수정페이지*/
+    @RequestMapping(value =  {"/news-letter/write/{indexDate}"}, method = RequestMethod.GET)
+    public String newsLetterWrite(Model model, @PathVariable("indexDate") String indexDate,RedirectAttributes redirectAttributes) {
+
+        /************** 비로그인시 로그인화면으로 이동 Start **************/
+        Account user = AuthenticationUtils.getUser();
+        String msg ="";
+        if(user == null){
+            msg=("권한이 없습니다. 로그인을 먼저 하세요.");
+            redirectAttributes.addFlashAttribute("msg", msg);
+            return "redirect:/account/login";
+        }
+        /************** 비로그인시 로그인화면으로 이동 End **************/
+
+        NewsLetter newsLetter=new NewsLetter();
+        newsLetter.setPkDate(indexDate);
+
+        List<NewsLetter> newsLetterList = exportWeatherService.selectNewsLetterList(newsLetter);
+        model.addAttribute("newsLetterList", newsLetterList);
+
+        return "admin/katis/news-letter/write";
+    }
+
+    /**
+     * 뉴스레터 쓰기 페이지
+     *
+     * @return
+     */
+    @RequestMapping(value = {"/news-letter/insertNewsLetter"}, method = RequestMethod.POST)
+    public String insertNewsLetter(@ModelAttribute("NewsLetter") NewsLetter newsLetter,RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        /************** 비로그인시 로그인화면으로 이동 Start **************/
+        Account user = AuthenticationUtils.getUser();
+        String msg ="";
+        if(user == null){
+            msg=("권한이 없습니다. 로그인을 먼저 하세요.");
+            redirectAttributes.addFlashAttribute("msg", msg);
+            return "redirect:/account/login";
+        }
+        /************** 비로그인시 로그인화면으로 이동 End **************/
+
+        //아이디
+        Account account = AuthenticationUtils.getUser();
+        newsLetter.setUpdateid(account.getEmail());
+
+        exportWeatherService.updateNewsLetter(newsLetter);
+
+        //메인화면에서 수정된거 먼저가져오도록 업데이트 날짜 셋팅함
+        Menu menu=new Menu();
+        menu.setUpdateid(account.getEmail());
+        menu.setId(5);
+
+        int menuUpdateCount = menuService.updateMenu(menu);
+
+        //뉴스래터 매뉴업데이트 함..
+        menuService.updateMenuNewLetter(menu);
+
+        return "redirect:/admin/katis/news-letter";
+    }
+
 }

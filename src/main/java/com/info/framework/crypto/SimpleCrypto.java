@@ -94,10 +94,10 @@ public class SimpleCrypto {
         String cleartext = "glasowk1225";
 
         String encrypt = encrypt(seed, cleartext);
-        System.out.println("암호화 : " + encrypt);
+        //System.out.println("암호화 : " + encrypt);
 
         String decrypt = decrypt(seed, encrypt);
-        System.out.println("복호화 : " + decrypt);
+        //System.out.println("복호화 : " + decrypt);
 
         String  number = "1000000000";
 
@@ -105,7 +105,7 @@ public class SimpleCrypto {
         DecimalFormat format = new DecimalFormat("#,##0");
         String returnStr = format.format(Integer.parseInt(number));
 
-        System.out.println("포맷팅 : " + returnStr);
+        //System.out.println("포맷팅 : " + returnStr);
     }
 
 }

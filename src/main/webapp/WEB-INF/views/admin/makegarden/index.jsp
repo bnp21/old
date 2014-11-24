@@ -25,7 +25,9 @@
                     <div class="box-body">
                         <div class="text-right" style="padding-bottom:10px;">
                             <button type="button" class="btn btn-success" onclick="excelDownload();"><i class="fa fa-money"></i>  엑셀 다운로드</button>
-                            <a href="/admin/notice/write/ins/0"><button type="button" class="btn btn-success">글쓰기</button></a>
+                            <!--
+                            <a href="/admin/makegarden/write/ins/0"><button type="button" class="btn btn-success">글쓰기</button></a>
+                            -->
                         </div>
                         <!--form:form class="form-horizontal" id="listForm"   method="POST"  name="listForm" modelAttribute="paramNotice"-->
                         <form id="searchForm" name="searchForm" action="/admin/makegarden/index" method="post">

@@ -224,9 +224,9 @@ public class Email {
             rootUrl="http://info.at.or.kr";
         }
 
-        System.out.println("url==>"+url);
-        System.out.println("pathUrl==>"+pathUrl);
-        System.out.println("rootUrl==>"+rootUrl);
+        //System.out.println("url==>"+url);
+        //System.out.println("pathUrl==>"+pathUrl);
+        //System.out.println("rootUrl==>"+rootUrl);
 
         //body.append("\n <link href='"+rootUrl+"/css/content.css' rel='stylesheet' type='text/css'> ");
         //http://info.at.or.kr/resources/front/img/bg/mail_top_bg.jpg
@@ -336,9 +336,9 @@ public class Email {
             rootUrl="http://info.at.or.kr";
         }
 
-        System.out.println("url==>"+url);
-        System.out.println("pathUrl==>"+pathUrl);
-        System.out.println("rootUrl==>"+rootUrl);
+        //System.out.println("url==>"+url);
+        //System.out.println("pathUrl==>"+pathUrl);
+        //System.out.println("rootUrl==>"+rootUrl);
 
         //body.append("\n <link href='"+rootUrl+"/css/content.css' rel='stylesheet' type='text/css'> ");
         //http://info.at.or.kr/resources/front/img/bg/mail_top_bg.jpg
@@ -456,6 +456,74 @@ public class Email {
         body.append("\n </html>");
 
         return body.toString();
+    }
+
+    /**<pre>
+     * TextArea에서 입력되어 DB에 저장된 것을 일반 table에서 보여줄때
+     *   줄바꿈 --&gt; &lt;br&gt;
+     *   공백   --&gt; & nbsp;
+     *   TAB    --&gt; & nbsp;& nbsp;
+     * 전환시켜줌.
+     * </pre>
+     *
+     * @param str
+     * @return String
+     */
+    public static String convEnt2Br(String str){
+        if(str==null)str="";
+
+        StringBuffer sb = new StringBuffer();
+        int startPos = 0;
+        int endPos   = 0;
+        String   temp = null;
+        while(true){
+            endPos = str.indexOf("\n", startPos);
+            if(startPos >= str.length()) break;
+            if(endPos <= -1) endPos = str.length();
+            temp = str.substring(startPos, endPos);
+            sb.append(temp);
+            sb.append("<br>");
+            startPos = endPos+1;
+        }
+
+        final String BLANK = " ";
+        final String NBSP = "&nbsp;";
+
+        temp = sb.toString();
+        sb.delete(0, sb.length());
+        int startIndex = 0;
+        for(int endIndex = 0; endIndex >= 0;)
+        {
+            endIndex = temp.indexOf(BLANK, startIndex);
+            if(endIndex < 0){
+                sb.append(temp.substring(startIndex, temp.length()));
+            }else{
+                sb.append(temp.substring(startIndex, endIndex));
+                sb.append(NBSP);
+            }
+
+            startIndex = endIndex + 1;
+        }
+
+        temp = sb.toString();
+        final String TAB   = "\t";
+        sb.delete(0, sb.length());
+        startIndex = 0;
+        for(int endIndex = 0; endIndex >= 0;)
+        {
+            endIndex = temp.indexOf(TAB, startIndex);
+            if(endIndex < 0){
+                sb.append(temp.substring(startIndex, temp.length()));
+            }else{
+                sb.append(temp.substring(startIndex, endIndex));
+                sb.append(NBSP);
+                sb.append(NBSP);
+            }
+            startIndex = endIndex + 1;
+        }
+
+        return sb.toString();
+
     }
 
 }

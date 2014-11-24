@@ -62,13 +62,13 @@ public class AtnewsController {
 
     @RequestMapping(value = {"/index","/"}, method = RequestMethod.GET)
     public String list(Model model) {
-        LOGGER.debug("AT소식 리스트 페이지");
+        //LOGGER.debug("AT소식 리스트 페이지");
 
         Atnews atnews = new Atnews();
 
         List<Atnews> atnewsList = atnewsService.selectAtnewsList(atnews);
 
-        LOGGER.info("List Size : {}", atnewsList.size());
+        //LOGGER.info("List Size : {}", atnewsList.size());
         model.addAttribute("atnewsList", atnewsList);
 
         return "atnews/index";

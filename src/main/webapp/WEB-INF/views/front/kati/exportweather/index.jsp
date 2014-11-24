@@ -58,7 +58,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[0].curAmt3/exportWeatherMonthList[0].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt3/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt3}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day"> '${exportWeatherMonthList[0].curAmtDate3} </div>
@@ -68,7 +68,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[0].curAmt2/exportWeatherMonthList[0].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt2/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt2}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[0].curAmtDate2}</div>
@@ -78,7 +78,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[0].curAmt1/exportWeatherMonthList[0].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt1/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[0].curAmt1}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[0].curAmtDate1}</div>
@@ -125,7 +125,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[1].curAmt3/exportWeatherMonthList[1].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt3/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt3}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day"> '${exportWeatherMonthList[1].curAmtDate3} </div>
@@ -135,7 +135,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[1].curAmt2/exportWeatherMonthList[1].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt2/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt2}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[1].curAmtDate2}</div>
@@ -145,7 +145,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[1].curAmt1/exportWeatherMonthList[1].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt1/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[1].curAmt1}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[1].curAmtDate1}</div>
@@ -192,7 +192,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[2].curAmt3/exportWeatherMonthList[2].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt3/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt3}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day"> '${exportWeatherMonthList[2].curAmtDate3} </div>
@@ -202,7 +202,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[2].curAmt2/exportWeatherMonthList[2].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt2/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt2}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[2].curAmtDate2}</div>
@@ -212,7 +212,7 @@
                         <div class="stick_list">
                             <div class="s_box">
                                 <div class="stick" style="height:<fmt:formatNumber value="${exportWeatherMonthList[2].curAmt1/exportWeatherMonthList[2].maxCurAmt*100}" pattern="##0"></fmt:formatNumber>%;">
-                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt1/10}" pattern="#,##0.#"></fmt:formatNumber></div>
+                                    <div class="num"><fmt:formatNumber value="${exportWeatherMonthList[2].curAmt1}" pattern="#,##0.#"></fmt:formatNumber></div>
                                 </div>
                             </div>
                             <div class="day">${exportWeatherMonthList[2].curAmtDate1}</div>

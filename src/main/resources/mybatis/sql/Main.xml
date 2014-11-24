@@ -186,10 +186,10 @@
         FROM (
                 SELECT
                       MENU_ID menuId,
-                      NVL(B.NAME,DECODE(A.MENU_ID,'90','메인','91','모바일 메인','21','전시일정','22','교육일정','23','창조마당','24','알림마당')) menuNm,
-                      VISITANT_CNT visitantCnt,
-                      VISIT_CNT visitCnt,
-                      PAGE_CNT pageCnt,
+                      B.NAME menuNm,
+                      NVL(VISITANT_CNT,0) visitantCnt,
+                      NVL(VISIT_CNT,0) visitCnt,
+                      NVL(PAGE_CNT,0) pageCnt,
                       PAGE_GBN pageGbn
                       FROM (
                           SELECT
@@ -230,11 +230,196 @@
                     AND A.CONTACT_DATE <![CDATA[ <=  ]]> #{endDate}
                 </if>
                  GROUP BY MENU_ID, PAGE_GBN
-                 ) A, MENU B
+                 ) A, STATISTICS_MENU B
                  WHERE 1=1
                  AND A.MENU_ID=B.ID(+)
-                 ORDER BY A.PAGE_CNT DESC
+                 ORDER BY A.MENU_ID ASC
         )
+
+    </select>
+
+
+    <!-- 통계 데이터 메뉴 리스트 일간, 월간, 년간 -->
+    <select id="Main.selectStatisticsMenuList" parameterType="Statistics" resultType="Statistics">
+
+        SELECT ID menuId,
+                NAME menuNm,
+                GBN pageGbn
+            FROM STATISTICS_MENU
+            WHERE 1=1
+        <if test="searchViewGbn == 0 and searchViewGbn != null">
+            AND GBN IN ('A')
+        </if>
+        <if test="searchViewGbn == 1 and searchViewGbn != null">
+            AND GBN IN ('B')
+        </if>
+        <if test="searchViewGbn == 2 and searchViewGbn != null">
+            AND GBN IN ('C')
+        </if>
+        <if test="searchViewGbn == 3 and searchViewGbn != null">
+            AND GBN IN ('C','D')
+        </if>
+
+    </select>
+
+    <!-- 통계 데이터 시간 리스트 일간, 월간, 년간 -->
+    <select id="Main.selectStatisticsDateList" parameterType="Statistics" resultType="Statistics">
+
+        <if test="searchDateGbn == 0 and searchDateGbn != null">
+            SELECT SUBSTR(pkDate,0,4)||'년 '|| SUBSTR(pkDate,5,2)||'월 '|| SUBSTR(pkDate,7,2)||'일' pkDate,
+            ( SELECT NVL(SUM(NVL(VISITANT_CNT,0)),0) FROM STATISTICS WHERE CONTACT_DATE=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY CONTACT_DATE ) visitantCnt,
+            ( SELECT NVL(SUM(NVL(VISIT_CNT,0)),0) FROM STATISTICS WHERE CONTACT_DATE=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY CONTACT_DATE ) visitCnt,
+            ( SELECT NVL(SUM(NVL(PAGE_CNT,0)),0) FROM STATISTICS WHERE CONTACT_DATE=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY CONTACT_DATE ) pageCnt
+            FROM (
+                SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                    FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                    ORDER BY pkDate
+            ) A
+            ORDER BY pkDate
+        </if>
+        <if test="searchDateGbn == 1 and searchDateGbn != null">
+            SELECT SUBSTR(pkDate,0,4)||'년 '|| SUBSTR(pkDate,5,2)||'월' pkDate,
+            ( SELECT NVL(SUM(NVL(VISITANT_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,6)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,6) ) visitantCnt,
+            ( SELECT NVL(SUM(NVL(VISIT_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,6)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,6) ) visitCnt,
+            ( SELECT NVL(SUM(NVL(PAGE_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,6)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,6) ) pageCnt
+            FROM
+            (
+                SELECT SUBSTR(pkDate,0,6) pkDate FROM (
+                        SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                            FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                            ORDER BY pkDate
+                ) GROUP BY SUBSTR(pkDate,0,6)
+            ) A
+            ORDER BY pkDate
+        </if>
+        <if test="searchDateGbn == 2 and searchDateGbn != null">
+            SELECT SUBSTR(pkDate,0,4)||'년' pkDate,
+            ( SELECT NVL(SUM(NVL(VISITANT_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,4)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,4) ) visitantCnt,
+            ( SELECT NVL(SUM(NVL(VISIT_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,4)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,4) ) visitCnt,
+            ( SELECT NVL(SUM(NVL(PAGE_CNT,0)),0) FROM STATISTICS WHERE SUBSTR(CONTACT_DATE,0,4)=A.pkDate AND PAGE_GBN=DECODE( #{searchViewGbn} ,'0','A','1','B','2','C','3','D') AND CONTACT_DATE <![CDATA[ >=  ]]> #{startDate} AND CONTACT_DATE <![CDATA[ <=  ]]> #{endDate} GROUP BY SUBSTR(CONTACT_DATE,0,4) ) pageCnt
+            FROM
+            (
+                SELECT SUBSTR(pkDate,0,4) pkDate FROM (
+                    SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                        FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                        ORDER BY pkDate
+                ) GROUP BY SUBSTR(pkDate,0,4)
+            ) A
+            ORDER BY pkDate
+        </if>
+
+    </select>
+
+    <!-- 통계 데이터 다운로드 리스트 -->
+    <select id="Main.selectStatisticsDateDownloadList" parameterType="Statistics" resultType="Statistics">
+        WITH DATE_VIEW AS (
+
+                <if test="searchDateGbn == 0 and searchDateGbn != null">
+                    SELECT pkDate PK_DATE FROM (
+                        SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                            FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                            ORDER BY pkDate
+                    )
+                </if>
+                <if test="searchDateGbn == 1 and searchDateGbn != null">
+                    SELECT pkDate PK_DATE
+                    FROM
+                    (
+                    SELECT SUBSTR(pkDate,0,6) pkDate FROM (
+                        SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                            FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                            ORDER BY pkDate
+                    ) GROUP BY SUBSTR(pkDate,0,6)
+                    )
+                </if>
+                <if test="searchDateGbn == 2 and searchDateGbn != null">
+                    SELECT pkDate PK_DATE
+                    FROM
+                    (
+                    SELECT SUBSTR(pkDate,0,4) pkDate FROM (
+                        SELECT TO_CHAR(TO_DATE(#{startDate},'YYYYMMDD')+ LEVEL - 1,'YYYYMMDD') AS pkDate
+                            FROM DUAL CONNECT BY LEVEL <![CDATA[ <=  ]]> TO_DATE(#{endDate},'YYYYMMDD') - TO_DATE(#{startDate},'YYYYMMDD')+1
+                            ORDER BY pkDate
+                    ) GROUP BY SUBSTR(pkDate,0,4)
+                    )
+                </if>
+
+        )
+        SELECT
+            --ROWNUM seq,
+            menuId,
+            menuNm,
+            contactDate,
+            visitantCnt,
+            visitCnt,
+            pageCnt
+        FROM (
+                SELECT
+                        #{menuId} menuId,
+                        (SELECT NAME FROM STATISTICS_MENU WHERE ID=#{menuId}) menuNm,
+                        B.PK_DATE contactDate,
+                        NVL(VISITANT_CNT,0) visitantCnt,
+                        NVL(VISIT_CNT,0) visitCnt,
+                        NVL(PAGE_CNT,0) pageCnt,
+                        PAGE_GBN pageGbn
+                      FROM (
+                            SELECT
+                                #{menuId} MENU_ID,
+                                PAGE_GBN,
+                                <if test="searchDateGbn == 0 and searchDateGbn != null">
+                                  A.CONTACT_DATE CONTACT_DATE,
+                                </if>
+                                <if test="searchDateGbn == 1 and searchDateGbn != null">
+                                    SUBSTR(A.CONTACT_DATE,0,6) CONTACT_DATE,
+                                </if>
+                                <if test="searchDateGbn == 2 and searchDateGbn != null">
+                                    SUBSTR(A.CONTACT_DATE,0,4) CONTACT_DATE,
+                                </if>
+                                SUM(NVL(VISITANT_CNT,0)) VISITANT_CNT,
+                                SUM(NVL(VISIT_CNT,0)) VISIT_CNT,
+                                SUM(NVL(PAGE_CNT,0)) PAGE_CNT
+                         FROM STATISTICS A
+                         WHERE 1=1
+                         AND A.MENU_ID =  #{menuId}
+
+                    <if test="searchViewGbn == 0 and searchViewGbn != null">
+                        AND A.PAGE_GBN IN ('A')
+                    </if>
+                    <if test="searchViewGbn == 1 and searchViewGbn != null">
+                        AND A.PAGE_GBN IN ('B')
+                    </if>
+                    <if test="searchViewGbn == 2 and searchViewGbn != null">
+                        AND A.PAGE_GBN IN ('C')
+                    </if>
+                    <if test="searchViewGbn == 3 and searchViewGbn != null">
+                        AND A.PAGE_GBN IN ('D')
+                    </if>
+
+                    <if test="startDate != null and startDate != ''">
+                        AND A.CONTACT_DATE <![CDATA[ >=  ]]> #{startDate}
+                    </if>
+                    <if test="endDate != null and endDate != ''">
+                        AND A.CONTACT_DATE <![CDATA[ <=  ]]> #{endDate}
+                    </if>
+
+                    <if test="searchDateGbn == 0 and searchDateGbn != null">
+                        GROUP BY MENU_ID, PAGE_GBN, A.CONTACT_DATE
+                        ORDER BY MENU_ID, PAGE_GBN, A.CONTACT_DATE
+                    </if>
+                    <if test="searchDateGbn == 1 and searchDateGbn != null">
+                        GROUP BY MENU_ID, PAGE_GBN, SUBSTR(A.CONTACT_DATE,0,6)
+                        ORDER BY MENU_ID, PAGE_GBN, SUBSTR(A.CONTACT_DATE,0,6)
+                    </if>
+                    <if test="searchDateGbn == 2 and searchDateGbn != null">
+                        GROUP BY MENU_ID, PAGE_GBN, SUBSTR(A.CONTACT_DATE,0,4)
+                        ORDER BY MENU_ID, PAGE_GBN, SUBSTR(A.CONTACT_DATE,0,4)
+                    </if>
+
+                 ) A,  DATE_VIEW B
+                 WHERE 1=1
+                AND A.CONTACT_DATE(+)=B.PK_DATE
+                ORDER BY A.MENU_ID ASC , B.PK_DATE ASC
+        ) A ORDER BY menuId, contactDate
 
     </select>
 

@@ -62,12 +62,12 @@ public class MakeGardenController {
      */
     @RequestMapping(value = {"/makegarden/insertMakeGarden"}, method = RequestMethod.POST)
     public String insertMakeGarden(@ModelAttribute("makeGarden") MakeGarden makeGarden, HttpServletRequest request,  HttpServletResponse response) {
-        LOGGER.info("쓰기 페이지");
+        //LOGGER.info("쓰기 페이지");
 
-        System.out.println("chk_agree==>");
+        //System.out.println("chk_agree==>");
         //등록하기
         int cnt=makeGardenService.insertMakeGarden(makeGarden);
-        System.out.println("cnt==>"+cnt);
+        //System.out.println("cnt==>"+cnt);
 
         /** 메일보내기 추가해야함 - 2014년11월04일 **/
 
@@ -88,14 +88,14 @@ public class MakeGardenController {
         String  toSecond = String.valueOf(cal.get(Calendar.SECOND));
 
         String today = toYear+"."+toMonth+"."+toDate+" "+toHour+":"+toMinite+":"+toSecond;  //  '2014.11.06 13:30:00'
-        System.out.println("today==>"+today);
+        //System.out.println("today==>"+today);
 
         if(cnt>0) {
-            System.out.println("메일보내기 시작");
+            //System.out.println("메일보내기 시작");
 
             Email email= new Email();
             email.setTitle(makeGarden.getTitle());
-            email.setMemo(makeGarden.getMemo());
+            email.setMemo(Email.convEnt2Br(makeGarden.getMemo()));
             email.setName(makeGarden.getName());
             email.setPhone(makeGarden.getPhone());
             email.setEmail(makeGarden.getEmail());
@@ -103,7 +103,7 @@ public class MakeGardenController {
             email.setCreatedate(today);
 
             makeGardenService.sendMail(email, request);
-            System.out.println("메일보내기 끝");
+            //System.out.println("메일보내기 끝");
         }
 
         //arlert창 메세지 추가함

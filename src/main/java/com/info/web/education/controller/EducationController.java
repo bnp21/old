@@ -44,13 +44,13 @@ public class EducationController {
 
     @RequestMapping(value = {"/index","/"}, method = RequestMethod.GET)
     public String list(Model model) {
-        LOGGER.debug("유통교육원 리스트 페이지");
+        //LOGGER.debug("유통교육원 리스트 페이지");
 
         Education education = new Education();
 
         List<Education> educationList = educationService.selectEducationList(education);
 
-        LOGGER.info("List Size : {}", educationList.size());
+        //LOGGER.info("List Size : {}", educationList.size());
         model.addAttribute("educationList", educationList);
 
         return "education/index";

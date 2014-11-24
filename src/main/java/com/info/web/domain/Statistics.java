@@ -25,7 +25,11 @@ public class Statistics {
 
     private String endDate;            //검색조건-종료일
 
+    private String pkDate;            //검색조건-구별날짜
+
     private Integer searchViewGbn;            //검색조건-화면구분[메인,모바일메인,생생정보,원본]
+
+    private Integer searchCntGbn;            //검색조건-카운트구분[전체,방문자수,방문횟수,페이지수]
 
     private Integer searchDateGbn;            //검색조건-날짜구분[일간,주간,월간,년간]
 
@@ -115,6 +119,14 @@ public class Statistics {
         this.endDate = endDate;
     }
 
+    public String getPkDate() {
+        return pkDate;
+    }
+
+    public void setPkDate(String pkDate) {
+        this.pkDate = pkDate;
+    }
+
     public Integer getSearchViewGbn() {
         return searchViewGbn;
     }
@@ -124,6 +136,13 @@ public class Statistics {
     }
     public Integer getSearchDateGbn() {
         return searchDateGbn;
+    }
+
+    public void setSearchCntGbn(Integer searchCntGbn) {
+        this.searchCntGbn = searchCntGbn;
+    }
+    public Integer getSearchCntGbn() {
+        return searchCntGbn;
     }
 
     public void setSearchDateGbn(Integer searchDateGbn) {

@@ -11,6 +11,121 @@
          FROM MENU
     </select>
 
+    <select id="Batch.getBatchData001List" parameterType="Batch" resultType="Batch">
+        SELECT
+            PM_DAY pkDate, PM_CODE, P_MOK_NM, P_JONG_NM,
+            'N' type
+        FROM (
+            SELECT
+             PM_DAY,
+             to_char(to_date(substr(PM_DAY,3,2)||'-'||substr(PM_DAY,5,2)||'-'||substr(PM_DAY,7,2)),'DY') WEEK,
+             max(A.PM_CODE) PM_CODE,
+             max(C.P_MOK_NAME) P_MOK_NM,
+             max(B.P_JONG_NAME)||''||max(decode(a.F_SONGE_CNT,'0','','/'||a.F_SONGE_CNT)) P_JONG_NM,
+             sum(A.SOK_CNT) SOK_CNT,
+             max(A.TOP_AMOUNT) TOP_AMOUNT,
+             min(A.BOT_AMOUNT) BOT_AMOUNT,
+             round(sum(A.P_PRICE) / sum(A.SOK_CNT),0) PRICE,
+             SUM(A.P_PRICE) TOTAL_PRICE
+            FROM A_LEVEL_PRICE@link_flw A,
+             A_PUM_JONG_INFO@link_flw B,
+             A_PUM_MOK_INFO@link_flw C
+            WHERE ( A.PM_CODE = B.PUM_CODE ) and
+             ( B.FLOWER_CODE = C.FLOWER_CODE ) and
+             ( B.P_MOK_CODE = C.P_MOK_CODE ) and
+             (
+             ( A.PM_DAY = ( SELECT MAX(MAGAM_ILJA) AS PM_DAY
+                                  FROM  A_DAY_MAGAM@link_flw
+                                  WHERE BUN_CHK='N'
+                                  GROUP BY BUN_CHK )
+              )
+        /*    and (A.PM_CODE like 품목코드)    */
+             and (A.BUN_CHK like 'N')
+             and (A.PM_CODE not in ('10010000','10020000','10030000','10050000','10030145', '10010674', '10110000','10100000','10870000','10030261'))
+             )
+            GROUP BY PM_DAY, A.PM_CODE,a.F_SONGE_CNT
+            /*ORDER BY 3 ASC, 5 ASC, 6 asc*/
+           )
+           GROUP BY PM_DAY, PM_CODE, P_MOK_NM, P_JONG_NM, rownum
+           ORDER BY 1,2,3
+    </select>
+    <select id="Batch.getBatchData001CList" parameterType="Batch" resultType="Batch">
+        SELECT
+            PM_DAY pkDate, PM_CODE, P_MOK_NM, P_JONG_NM,
+            'C' type
+        FROM (
+            SELECT
+             PM_DAY,
+             to_char(to_date(substr(PM_DAY,3,2)||'-'||substr(PM_DAY,5,2)||'-'||substr(PM_DAY,7,2)),'DY') WEEK,
+             max(A.PM_CODE) PM_CODE,
+             max(C.P_MOK_NAME) P_MOK_NM,
+             max(B.P_JONG_NAME)||''||max(decode(a.F_SONGE_CNT,'0','','/'||a.F_SONGE_CNT)) P_JONG_NM,
+             sum(A.SOK_CNT) SOK_CNT,
+             max(A.TOP_AMOUNT) TOP_AMOUNT,
+             min(A.BOT_AMOUNT) BOT_AMOUNT,
+             round(sum(A.P_PRICE) / sum(A.SOK_CNT),0) PRICE,
+             SUM(A.P_PRICE) TOTAL_PRICE
+            FROM A_LEVEL_PRICE@link_flw A,
+             A_PUM_JONG_INFO@link_flw B,
+             A_PUM_MOK_INFO@link_flw C
+            WHERE ( A.PM_CODE = B.PUM_CODE ) and
+             ( B.FLOWER_CODE = C.FLOWER_CODE ) and
+             ( B.P_MOK_CODE = C.P_MOK_CODE ) and
+             (
+             ( A.PM_DAY = ( SELECT MAX(MAGAM_ILJA) AS PM_DAY
+                                  FROM  A_DAY_MAGAM@link_flw
+                                  WHERE BUN_CHK='C'
+                                  GROUP BY BUN_CHK )
+              )
+        /*    and (A.PM_CODE like 품목코드)    */
+             and (A.BUN_CHK like 'C')
+             and (A.PM_CODE not in ('10010000','10020000','10030000','10050000','10030145', '10010674', '10110000','10100000','10870000','10030261'))
+             )
+            GROUP BY PM_DAY, A.PM_CODE,a.F_SONGE_CNT
+            /*ORDER BY 3 ASC, 5 ASC, 6 asc*/
+           )
+           GROUP BY PM_DAY, PM_CODE, P_MOK_NM, P_JONG_NM, rownum
+           ORDER BY 1,2,3
+    </select>
+    <select id="Batch.getBatchData001YList" parameterType="Batch" resultType="Batch">
+        SELECT
+            PM_DAY pkDate, PM_CODE, P_MOK_NM, P_JONG_NM,
+            'Y' type
+        FROM (
+            SELECT
+             PM_DAY,
+             to_char(to_date(substr(PM_DAY,3,2)||'-'||substr(PM_DAY,5,2)||'-'||substr(PM_DAY,7,2)),'DY') WEEK,
+             max(A.PM_CODE) PM_CODE,
+             max(C.P_MOK_NAME) P_MOK_NM,
+             max(B.P_JONG_NAME)||''||max(decode(a.F_SONGE_CNT,'0','','/'||a.F_SONGE_CNT)) P_JONG_NM,
+             sum(A.SOK_CNT) SOK_CNT,
+             max(A.TOP_AMOUNT) TOP_AMOUNT,
+             min(A.BOT_AMOUNT) BOT_AMOUNT,
+             round(sum(A.P_PRICE) / sum(A.SOK_CNT),0) PRICE,
+             SUM(A.P_PRICE) TOTAL_PRICE
+            FROM A_LEVEL_PRICE@link_flw A,
+             A_PUM_JONG_INFO@link_flw B,
+             A_PUM_MOK_INFO@link_flw C
+            WHERE ( A.PM_CODE = B.PUM_CODE ) and
+             ( B.FLOWER_CODE = C.FLOWER_CODE ) and
+             ( B.P_MOK_CODE = C.P_MOK_CODE ) and
+             (
+             ( A.PM_DAY = ( SELECT MAX(MAGAM_ILJA) AS PM_DAY
+                                  FROM  A_DAY_MAGAM@link_flw
+                                  WHERE BUN_CHK='Y'
+                                  GROUP BY BUN_CHK )
+              )
+        /*    and (A.PM_CODE like 품목코드)    */
+             and (A.BUN_CHK like 'Y')
+             and (A.PM_CODE not in ('10010000','10020000','10030000','10050000','10030145', '10010674', '10110000','10100000','10870000','10030261'))
+             )
+            GROUP BY PM_DAY, A.PM_CODE,a.F_SONGE_CNT
+            /*ORDER BY 3 ASC, 5 ASC, 6 asc*/
+           )
+           GROUP BY PM_DAY, PM_CODE, P_MOK_NM, P_JONG_NM, rownum
+           ORDER BY 1,2,3
+    </select>
+
     <update id="Batch.deleteBatch001" parameterType="Batch">
             DELETE FROM FLOWER_VOLUME WHERE PK_DAY = ( SELECT MAX(MAGAM_ILJA) AS PM_DAY
                                                           FROM  A_DAY_MAGAM@link_flw
@@ -227,7 +342,13 @@
     </update>
 
 
-    <!--//KATI, 해외도소매가격식품 - 하루전날, 당일꺼 가지고 옮-->
+    <!--//KATI, 해외도소매가격식품 - 당일꺼 가지고 옮-->
+    <delete id="Batch.deleteBatch002">
+         DELETE FROM FOREIGN_WHOLESALE
+        WHERE PK_DATE = ( SELECT MAX(SALE_DATE) FROM WHOLESALE@link_kati WHERE REPLACE(COUNTRY_CODE,'1','') in ('US') )
+        AND REPLACE(COUNTRY_CODE,'1','') in ('US')
+    </delete>
+
     <update id="Batch.insertBatch002" >
         INSERT INTO FOREIGN_WHOLESALE
         (SEQ, SALE_DATE,COUNTRY_CODE,ITEM_CODE,ITEM_NAME,PLACE_NAME,UNIT,FIRST_ITEM,MEDIUM_ITEM,CREATEDATE,POOR_ITEM, PK_DATE )
@@ -247,17 +368,17 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
             , SUBSTR(A.ITEM_CODE,1,4) AS SI
             , A.SALE_DATE AS SALEDATE
             , A.COUNTRY_CODE AS COUNTRYCODE
-            FROM  rkati.WHOLESALE@LINK_KATI A, rkati.ITEM@LINK_KATI B, rkati.PLACE@LINK_KATI C
+            FROM  WHOLESALE@link_kati A, ITEM@link_kati B, PLACE@link_kati C
             WHERE  A.ITEM_CODE = B.ITEM_CODE
             AND A.PLACE_CODE = C.PLACE_CODE(+)
-            AND REPLACE(A.COUNTRY_CODE,'1','') in ('JP','US')
+            AND REPLACE(A.COUNTRY_CODE,'1','') in ('US')
       AND  A.MARKET_CODE = '01'
-      AND A.SALE_DATE = to_char(sysdate, 'YYYYMMDD')
+      AND A.SALE_DATE = ( SELECT MAX(SALE_DATE) FROM WHOLESALE@link_kati )
             ) A,
             (
             SELECT SUBSTR(ITEM_CODE,1,4) SI
             , ITEM_NAME
-            FROM rkati.ITEM@LINK_KATI
+            FROM ITEM@link_kati
             WHERE ITEM_CODE LIKE '%' || '00'
             ) B
         WHERE A.SI = B.SI
@@ -265,10 +386,48 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
 
     </update>
 
-    <delete id="Batch.deleteBatch002">
+    <delete id="Batch.deleteBatch002_JP">
         DELETE FROM FOREIGN_WHOLESALE
-        WHERE PK_DATE = to_char(sysdate, 'YYYYMMDD')
+        WHERE PK_DATE = ( SELECT MAX(SALE_DATE) FROM WHOLESALE@link_kati WHERE REPLACE(COUNTRY_CODE,'1','') in ('JP') )
+        AND REPLACE(COUNTRY_CODE,'1','') in ('JP')
     </delete>
+
+    <update id="Batch.insertBatch002_JP" >
+        INSERT INTO FOREIGN_WHOLESALE
+        (SEQ, SALE_DATE,COUNTRY_CODE,ITEM_CODE,ITEM_NAME,PLACE_NAME,UNIT,FIRST_ITEM,MEDIUM_ITEM,CREATEDATE,POOR_ITEM, PK_DATE )
+SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACENAME, A.UNITNAME, A.FIRSTITEM, A.MEDIUMITEM, to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS'), A.POORITEM, to_char(sysdate, 'YYYYMMDD')
+        FROM
+            (
+            SELECT  B.ITEM_NAME AS ITEMNAME
+            , C.PLACE_NAME AS PLACENAME
+            , A.UNIT_NAME AS UNITNAME
+            , TO_CHAR(ROUND(A.FIRST_ITEM,2),'999,999,990.0') AS FIRSTITEM
+            , TO_CHAR(ROUND(A.MEDIUM_ITEM,2),'999,999,990.0') AS MEDIUMITEM
+            , TO_CHAR(ROUND(A.POOR_ITEM,2),'999,999,990.0') AS POORITEM
+            , TO_CHAR(ROUND(A.FIRST_ITEMW,2),'999,999,990.0') AS FIRSTITEMW
+            , TO_CHAR(ROUND(A.MEDIUM_ITEMW,2),'999,999,990.0') AS MEDIUMITEMW
+            , TO_CHAR(ROUND(A.POOR_ITEMW,2),'999,999,990.0') AS POORITEMW
+            , A.ITEM_CODE AS ITEMCODE
+            , SUBSTR(A.ITEM_CODE,1,4) AS SI
+            , A.SALE_DATE AS SALEDATE
+            , A.COUNTRY_CODE AS COUNTRYCODE
+            FROM  WHOLESALE@link_kati A, ITEM@link_kati B, PLACE@link_kati C
+            WHERE  A.ITEM_CODE = B.ITEM_CODE
+            AND A.PLACE_CODE = C.PLACE_CODE(+)
+            AND REPLACE(A.COUNTRY_CODE,'1','') in ('JP')
+      AND  A.MARKET_CODE = '01'
+      AND A.SALE_DATE = ( SELECT MAX(SALE_DATE) FROM WHOLESALE@link_kati )
+            ) A,
+            (
+            SELECT SUBSTR(ITEM_CODE,1,4) SI
+            , ITEM_NAME
+            FROM ITEM@link_kati
+            WHERE ITEM_CODE LIKE '%' || '00'
+            ) B
+        WHERE A.SI = B.SI
+        order by saledate desc
+
+    </update>
     <!--//KATI, 해외도소매가격식품-->
 
     <!--//aT센터, 최근소식-->
@@ -404,7 +563,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         WHERE 1=1
         AND A.PRODUCT_ID=B.ITEM_CODE
         AND B.GROUP_CODE='H'
-        AND A.PK_DATE = ( SELECT MAX(PK_DATE) PK_DATE FROM PRODUCT_PRICE WHERE 1=1 AND VIEW_YN ='Y' ORDER BY PK_DATE DESC  )
+        AND A.PK_DATE = ( SELECT MAX(PK_DATE) PK_DATE FROM PRODUCT_PRICE WHERE 1=1 AND VIEW_YN ='Y' )
         AND A.VIEW_YN = 'Y'
         AND ROWNUM  <![CDATA[  <=   ]]> 10
 
@@ -412,7 +571,16 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
     </update>
 
     <!-- 수출기상도 -->
-    <update id="Batch.insertBatch006">
+    <select id="Batch.getBatchData006" parameterType="Batch" resultType="Batch">
+        SELECT SUBSTR(YYYYMM,0,4) pkYear, SUBSTR(YYYYMM,5,2) pkMonth, WEEK_TY pkWeek from ATSM_WEEK
+            WHERE 1=1
+            AND FR_DATE <![CDATA[ <=  ]]> to_char(sysdate-7, 'YYYYMMDD')
+            AND TO_DATE <![CDATA[ >=  ]]> to_char(sysdate-7, 'YYYYMMDD')
+            AND BASIS_YYMM=SUBSTR(to_char(sysdate-7, 'YYYYMMDD'),0,6)
+            AND YYYYMM = SUBSTR(to_char(sysdate-7, 'YYYYMMDD'),0,6)
+    </select>
+
+    <update id="Batch.insertBatch006" parameterType="Batch">
         INSERT INTO EXPORT_WEATHER
         (
         SEQ
@@ -433,8 +601,8 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )
         SELECT
         ROWNUM,
-        to_char(sysdate, 'YYYY') PK_YEAR,
-        to_char(sysdate, 'MM') PK_MONTH,
+        to_char(sysdate-7, 'YYYY') PK_YEAR,
+        to_char(sysdate-7, 'MM') PK_MONTH,
         RT_SUBCD ITEM_CODE,
         RT_TITLE ITEM_NAME,
         -- BTOT_WGT,
@@ -448,8 +616,8 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         ,'BATCH' UPDATEID
         ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') UPDATEDATE
         ,'' BOOKNUM
-        ,to_char(sysdate, 'W') PK_WEEK
-        ,'Y' VIEW_YN
+        ,#{pkWeek} PK_WEEK
+        ,'' VIEW_YN
         FROM
         (
         SELECT
@@ -525,18 +693,18 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         SUM(BYEAR_WGT ) BYEAR_WGT , SUM(BYEAR_AMT ) BYEAR_AMT ,
         SUM(YEAR_WGT  ) YEAR_WGT  , SUM(YEAR_AMT  ) YEAR_AMT
         FROM (SELECT B.AGCD, B.HSCD,
-        DECODE(B.YYYYMM, (to_char(sysdate, 'YYYY')-1 || to_char(sysdate, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) BYEAR_WGT,  /* 파라미터 */
-        DECODE(B.YYYYMM, (to_char(sysdate, 'YYYY')-1 || to_char(sysdate, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) BYEAR_AMT,  /* 파라미터 */
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) YEAR_WGT, /* 파라미터 */
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) YEAR_AMT  /* 파라미터 */
+        DECODE(B.YYYYMM, (to_char(sysdate-7, 'YYYY')-1 || to_char(sysdate-7, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_WGT,0)) BYEAR_WGT,  /* 파라미터 */
+        DECODE(B.YYYYMM, (to_char(sysdate-7, 'YYYY')-1 || to_char(sysdate-7, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) BYEAR_AMT,  /* 파라미터 */
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_WGT,0)) YEAR_WGT, /* 파라미터 */
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) YEAR_AMT  /* 파라미터 */
         FROM ATST_TRADETRASS_WEEK@link_kati B
-        WHERE B.BASIS_YYMM = to_char(sysdate, 'YYYY') /* 파라미터 */
+        WHERE B.BASIS_YYMM = to_char(sysdate-7, 'YYYYMM') /* 파라미터 */
         AND B.EXP_TY = 'E'  /*3*/
         AND B.VIEW_YN = 'Y'
-        AND B.WEEK_TY = to_char(sysdate, 'W')/* ('1','4') */ /* 파라미터 */
+        AND B.WEEK_TY = #{pkWeek} /* ('1','4') */ /* 파라미터 */
         AND B.ATTR_TY IN ('1','2','3') /*2*/
         AND B.AGCD IN (SELECT  AGCD  FROM ATSL_AGCDHISTORY@link_kati a
-        WHERE update_dt <![CDATA[ <=  ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
+        WHERE update_dt <![CDATA[ <=  ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate-7, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
         AND AGCD IN(SELECT AG_CODE FROM ATSM_REPORTSUB_DETAIL@link_kati WHERE RT_CD = trim('ATSTREPORT26'))
         AND LENGTH(AGCD) = 9)
         ) M
@@ -554,7 +722,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )Z1
     </update>
 
-    <update id="Batch.insertBatch008">
+    <update id="Batch.insertBatch008"  parameterType="Batch">
         INSERT INTO EXPORT_WEATHER_ITEM
         (
         SEQ
@@ -572,8 +740,8 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )
         SELECT
         ROWNUM,
-        to_char(sysdate, 'MM') PK_MONTH,
-        to_char(sysdate, 'W')  PK_WEEK,
+        to_char(sysdate-7, 'MM') PK_MONTH,
+        #{pkWeek}  PK_WEEK,
         RT_SUBCD, RT_TITLE,
         -- BTOT_WGT,
         BTOT_AMT,
@@ -583,7 +751,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         TOT_AMTPER,
         'BATCH',
         to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') CREATEDATE,
-        to_char(sysdate, 'YYYY') PK_YEAR,
+        to_char(sysdate-7, 'YYYY') PK_YEAR,
         '' ITEM_GROUP
         FROM
         (
@@ -653,19 +821,18 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         SUM(BYEAR_WGT ) BYEAR_WGT , SUM(BYEAR_AMT ) BYEAR_AMT ,
         SUM(YEAR_WGT  ) YEAR_WGT  , SUM(YEAR_AMT  ) YEAR_AMT
         FROM (SELECT B.AGCD, B.HSCD,
-        DECODE(B.YYYYMM, (to_char(sysdate, 'YYYY')-1 || to_char(sysdate, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) BYEAR_WGT,
-        DECODE(B.YYYYMM, (to_char(sysdate, 'YYYY')-1 || to_char(sysdate, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) BYEAR_AMT,
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) YEAR_WGT,
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) YEAR_AMT
+        DECODE(B.YYYYMM, (to_char(sysdate-7, 'YYYY')-1 || to_char(sysdate-7, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_WGT,0)) BYEAR_WGT,
+        DECODE(B.YYYYMM, (to_char(sysdate-7, 'YYYY')-1 || to_char(sysdate-7, 'MM')), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) BYEAR_AMT,
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_WGT,0)) YEAR_WGT,
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) YEAR_AMT
         FROM ATST_TRADETRASS_WEEK@link_kati B
-        WHERE B.BASIS_YYMM = to_char(sysdate, 'YYYYMM') /*1*/
+        WHERE B.BASIS_YYMM = to_char(sysdate-7, 'YYYYMM') /*1*/
         AND B.EXP_TY = 'E'  /*3*/
         AND B.VIEW_YN = 'Y'
-
-        AND B.WEEK_TY = to_char(sysdate, 'W')/* ('1','4') */ /*2*/
+        AND B.WEEK_TY = #{pkWeek} /* ('1','4') */ /*2*/
         AND B.ATTR_TY IN ('1','2','3') /*2*/
         AND B.AGCD IN (SELECT  AGCD  FROM ATSL_AGCDHISTORY@link_kati a
-        WHERE update_dt  <![CDATA[ <=  ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
+        WHERE update_dt  <![CDATA[ <=  ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate-7, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
         AND AGCD IN(SELECT AG_CODE FROM ATSM_REPORTSUB_DETAIL@link_kati WHERE RT_CD = trim('ATSTREPORT28'))
         AND LENGTH(AGCD) = 9)
         ) M
@@ -683,12 +850,11 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )Z1
     </update>
 
-    <update id="Batch.insertBatch009">
+    <update id="Batch.insertBatch009"  parameterType="Batch">
         UPDATE
         EXPORT_WEATHER_ITEM
         SET ITEM_GROUP = '1'
         WHERE ITEM_CODE IN (
-        'SUB63',
         'SUB03',
         'SUB04',
         'SUB05',
@@ -710,7 +876,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         'SUB23' )
     </update>
 
-    <update id="Batch.insertBatch009_01">
+    <update id="Batch.insertBatch009_01"  parameterType="Batch">
         UPDATE
         EXPORT_WEATHER_ITEM
         SET ITEM_GROUP = '2'
@@ -730,7 +896,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         'SUB58' )
     </update>
 
-    <update id="Batch.insertBatch009_02">
+    <update id="Batch.insertBatch009_02"  parameterType="Batch">
         UPDATE
         EXPORT_WEATHER_ITEM
         SET ITEM_GROUP = '3'
@@ -747,7 +913,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         'SUB62' )
     </update>
 
-    <update id="Batch.insertBatch010">
+    <update id="Batch.insertBatch010"  parameterType="Batch">
         INSERT INTO EXPORT_WEATHER_MONTH
         (
         SEQ
@@ -764,8 +930,8 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )
         SELECT
         ROWNUM,
-        to_char(sysdate, 'MM') PK_MONTH,
-        to_char(sysdate, 'W') PK_WEEK,
+        to_char(sysdate-7, 'MM') PK_MONTH,
+        #{pkWeek} PK_WEEK,
         RT_SUBCD ITEM_CODE,
         RT_TITLE ITEM_NAME,
         BBEF_AMT,
@@ -773,7 +939,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         CUR_AMT,
         'BATCH' CREATEID,
         to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') CREATEDATE,
-        to_char(sysdate, 'YYYY') PK_YEAR
+        to_char(sysdate-7, 'YYYY') PK_YEAR
         FROM (
         SELECT
         RT_CD, RT_SUBCD, RT_TITLE,
@@ -785,7 +951,7 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         NVL(SUM(CUR_AMT),0) AS CUR_AMT
         FROM
         (SELECT A.RT_ORDNO AS ORDNO,A.RT_NO,A.RT_CD,A.RT_SUBCD, A.RT_TITLE,  B.AG_CODE, B.AG_NAME
-        FROM TRADE.ATSM_REPORTSUB@link_kati A, TRADE.ATSM_REPORTSUB_DETAIL@link_kati B
+        FROM ATSM_REPORTSUB@link_kati A, ATSM_REPORTSUB_DETAIL@link_kati B
         WHERE 1=1
         AND A.RT_CD = trim('ATSTREPORT26')
         AND A.RT_CD = B.RT_CD
@@ -841,19 +1007,19 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         SUM(CUR_WGT  ) CUR_WGT  , SUM(CUR_AMT  ) CUR_AMT
         FROM (
         SELECT A.AGCD||'-'||A.HSCD AGCODE,
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-3), A.CUR_WGT, 0) BBEF_WGT ,   /* 파라미터 */
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-3), A.CUR_AMT, 0) BBEF_AMT ,   /* 파라미터 */
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-2), A.CUR_WGT, 0)  BEF_WGT ,   /* 파라미터 */
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-2), A.CUR_AMT, 0)  BEF_AMT ,   /* 파라미터 */
-        0  CUR_WGT ,
-        0  CUR_AMT
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-3), A.CUR_WGT, 0) BBEF_WGT ,   /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-3), A.CUR_AMT, 0) BBEF_AMT ,   /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-2), A.CUR_WGT, 0)  BEF_WGT ,   /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-2), A.CUR_AMT, 0)  BEF_AMT ,   /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-1), A.CUR_AMT, 0)  CUR_WGT ,
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-1), A.CUR_AMT, 0)  CUR_AMT
         FROM ATST_TRADETRASS_PROD@link_kati A
-        WHERE A.BASIS_YYMM IN ((to_char(sysdate, 'YYYYMM')-3),(to_char(sysdate, 'YYYYMM')-2)) /*1*/   /* 파라미터 */
-        AND A.DATA_TY = '1' /*2*/
+        WHERE A.BASIS_YYMM IN ((to_char(sysdate-7, 'YYYYMM')-3),(to_char(sysdate-7, 'YYYYMM')-2),(to_char(sysdate-7, 'YYYYMM')-1)) /*1*/   /* 파라미터 */
+        AND A.DATA_TY = '1' /*1.확정치 , 2:잠정치*/
         AND A.EXP_TY = 'E' /*3*/
         AND A.VIEW_YN = 'Y'
         AND A.AGCD IN (SELECT  AGCD FROM ATSL_AGCDHISTORY@link_kati a
-        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE((to_char(sysdate, 'YYYYMM')-1),'YYYYMM')),'YYYYMMDD') /*5*/  /* 파라미터 */
+        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE((to_char(sysdate-7, 'YYYYMM')-1),'YYYYMM')),'YYYYMMDD') /*5*/  /* 파라미터 */
         AND AGCD IN(SELECT AG_CODE FROM ATSM_REPORTSUB_DETAIL@link_kati WHERE RT_CD = trim('ATSTREPORT26'))
         AND LENGTH(AGCD) = 9)
         UNION ALL
@@ -862,15 +1028,15 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
 
         0        BBEF_WGT , 0        BBEF_AMT ,
         0         BEF_WGT , 0         BEF_AMT ,
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-1), A.CUR_WGT, 0) CUR_WGT ,  /* 파라미터 */
-        DECODE(A.BASIS_YYMM, (to_char(sysdate, 'YYYYMM')-1), A.CUR_AMT, 0) CUR_AMT    /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-1), A.CUR_WGT, 0) CUR_WGT ,  /* 파라미터 */
+        DECODE(A.BASIS_YYMM, (to_char(sysdate-7, 'YYYYMM')-1), A.CUR_AMT, 0) CUR_AMT    /* 파라미터 */
         FROM ATST_TRADETRASS_PROD@link_kati A
         WHERE A.BASIS_YYMM IN ((to_char(sysdate, 'YYYYMM')-1)) /*6*/
         AND A.DATA_TY = '1' /*7 1:월확정치, 3:년확정치  */
         AND A.EXP_TY = 'E'/*3*/
         AND A.VIEW_YN = 'Y'
         AND A.AGCD IN (SELECT  AGCD  FROM ATSL_AGCDHISTORY@link_kati a
-        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE((to_char(sysdate, 'YYYYMM')-1),'YYYYMM')),'YYYYMMDD') /*5*/ /* 파라미터 */
+        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE((to_char(sysdate-7, 'YYYYMM')-1),'YYYYMM')),'YYYYMMDD') /*5*/ /* 파라미터 */
         AND AGCD IN(SELECT AG_CODE FROM ATSM_REPORTSUB_DETAIL@link_kati WHERE RT_CD = trim('ATSTREPORT26'))
         AND LENGTH(AGCD) = 9)
         ) M
@@ -888,36 +1054,37 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         )Z1
     </update>
 
-    <update id="Batch.insertBatch011">
-    INSERT INTO EXPORT_WEATHER_NATION
-    (
-    SEQ
-    ,PK_MONTH
-    ,PK_WEEK
-    ,ITEM_NAME
-    ,TOT_AMTPER
-    ,CREATEID
-    ,CREATEDATE
-    ,PK_YEAR
-    )
-    SELECT ROWNUM, T.* FROM (
-    SELECT
-    to_char(sysdate, 'MM')  PK_MONTH,
-    to_char(sysdate, 'W')  PK_WEEK,
-    RT_TITLE,
-    -- NVL(SUM(BYEAR_WGT),0) AS BTOT_WGT,
-    --   NVL(SUM(MM.BYEAR_AMT),0) AS  BTOT_AMT,
-    --    NVL(SUM(YEAR_WGT),0) AS TOT_WGT,
-    --   NVL(SUM(YEAR_AMT),0) AS TOT_AMT,
-    --   NVL(DECODE(SUM(BYEAR_WGT), 0,0,ROUND(((SUM(YEAR_WGT)/SUM(BYEAR_WGT))-1)*100,2)), 0) TOT_WGTPER,
-    NVL(DECODE(SUM(MM.BYEAR_AMT), 0,0,ROUND(((SUM(YEAR_AMT)/SUM(MM.BYEAR_AMT))-1)*100,2)), 0) TOT_AMTPER,
-    'BATCH' CREATEID,
-    to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') CREATEDATE,
-    to_char(sysdate, 'YYYY')
-    FROM
+    <update id="Batch.insertBatch011"  parameterType="Batch">
+        INSERT INTO EXPORT_WEATHER_NATION
+        (
+        SEQ
+        ,PK_MONTH
+        ,PK_WEEK
+        ,ITEM_NAME
+        ,TOT_AMTPER
+        ,CREATEID
+        ,CREATEDATE
+        ,PK_YEAR
+        )
+        SELECT ROWNUM, T.* FROM (
+        SELECT
+        to_char(sysdate-7, 'MM')  PK_MONTH,
+        #{pkWeek}  PK_WEEK,
+        RT_TITLE,
+        -- NVL(SUM(BYEAR_WGT),0) AS BTOT_WGT,
+        --   NVL(SUM(MM.BYEAR_AMT),0) AS  BTOT_AMT,
+        --    NVL(SUM(YEAR_WGT),0) AS TOT_WGT,
+
+        --   NVL(SUM(YEAR_AMT),0) AS TOT_AMT,
+        --   NVL(DECODE(SUM(BYEAR_WGT), 0,0,ROUND(((SUM(YEAR_WGT)/SUM(BYEAR_WGT))-1)*100,2)), 0) TOT_WGTPER,
+        NVL(DECODE(SUM(MM.BYEAR_AMT), 0,0,ROUND(((SUM(YEAR_AMT)/SUM(MM.BYEAR_AMT))-1)*100,2)), 0) TOT_AMTPER,
+        'BATCH' CREATEID,
+        to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') CREATEDATE,
+        to_char(sysdate-7, 'YYYY')
+        FROM
         (SELECT A.RT_ORDNO AS ORDNO,A.RT_NO,A.RT_CD,A.RT_SUBCD, A.RT_TITLE,  B.AG_CODE, B.AG_NAME,
         (SELECT SUM(TOT_AMT) FROM ATST_TRADETRASS@link_kati
-        WHERE BASIS_YYMM = to_char(add_months(sysdate,-12),'YYYY')||'12'
+        WHERE BASIS_YYMM = to_char(add_months(sysdate-7,-12),'YYYY')||'12'
         AND DATA_TY = '1'
         AND  EXP_TY = 'E'
         AND NATCD = B.AG_CODE
@@ -951,18 +1118,18 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         SUM(BYEAR_WGT ) BYEAR_WGT , SUM(BYEAR_AMT ) BYEAR_AMT ,
         SUM(YEAR_WGT  ) YEAR_WGT  , SUM(YEAR_AMT  ) YEAR_AMT
         FROM (SELECT B.NATCD,
-        DECODE(B.YYYYMM, to_char(add_months(sysdate,-12),'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) BYEAR_WGT, /* 파라미터*/
-        DECODE(B.YYYYMM, to_char(add_months(sysdate,-12),'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) BYEAR_AMT, /* 파라미터*/
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_WGT,0)) YEAR_WGT, /* 파라미터*/
-        DECODE(B.YYYYMM, to_char(sysdate, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, to_char(sysdate, 'W')||'1', B.TOT_AMT,0)) YEAR_AMT /* 파라미터*/
+        DECODE(B.YYYYMM, to_char(add_months(sysdate-7,-12),'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY,#{pkWeek}||'1', B.TOT_WGT,0)) BYEAR_WGT, /* 파라미터*/
+        DECODE(B.YYYYMM, to_char(add_months(sysdate-7,-12),'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) BYEAR_AMT, /* 파라미터*/
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_WGT,0)) YEAR_WGT, /* 파라미터*/
+        DECODE(B.YYYYMM, to_char(sysdate-7, 'YYYYMM'), DECODE(B.WEEK_TY||B.ATTR_TY, #{pkWeek}||'1', B.TOT_AMT,0)) YEAR_AMT /* 파라미터*/
         FROM ATST_TRADETRASS_WEEK@link_kati B
-        WHERE B.BASIS_YYMM = to_char(sysdate, 'YYYYMM') /*1*/ /* 파라미터*/
+        WHERE B.BASIS_YYMM = to_char(sysdate-7, 'YYYYMM') /*1*/ /* 파라미터*/
         AND B.EXP_TY = 'E'  /*3*/
         AND B.VIEW_YN = 'Y'
-        AND B.WEEK_TY = to_char(sysdate, 'W')/* ('1','4') */ /* 파라미터*/
+        AND B.WEEK_TY = #{pkWeek} /* ('1','4') */ /* 파라미터*/
         AND B.ATTR_TY IN ('1','2','3') /*2*/
         AND B.AGCD IN (SELECT  AGCD  FROM ATSL_AGCDHISTORY@link_kati a
-        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
+        WHERE update_dt <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(to_char(sysdate-7, 'YYYYMM'),'YYYYMM')),'YYYYMMDD') /*5*/
         AND LENGTH(AGCD) = 9)
         ) M
         GROUP BY M.NATCD
@@ -976,6 +1143,25 @@ SELECT ROWNUM,  A.SALEDATE, A.COUNTRYCODE, A.ITEMCODE, B.ITEM_NAME NAME, A.PLACE
         ON NATCD = NN.AG_CODE
         GROUP BY ORDNO, RT_CD,RT_SUBCD,RT_TITLE
         ORDER BY ORDNO /* RT_CD,RT_SUBCD,RT_TITLE */ ) T
+    </update>
+
+    <!-- 뉴스래터 등록 -->
+    <update id="Batch.insertBatch007" parameterType="NewsLetter">
+        INSERT INTO NEWS_LETTER
+        (
+        PK_DATE
+        ,TITLE
+        ,IMG
+        ,CREATEDATE
+        ,CREATEID
+        )
+        values (
+        to_char(sysdate, 'YYYYMMDD')
+        ,#{title}
+        ,#{img}
+        ,to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        ,'batch'
+        )
     </update>
 
     <update id="Batch.updateMenu" parameterType="Batch">

@@ -88,10 +88,10 @@ function menuHtmlData(data,menuid, htmlBody){
             htmlBody = htmlBody.replace("::CLASSFLUC2::","green");
         }
     }else if( menuid == "5" ){//뉴스레터
-        htmlBody = htmlBody.replace("::URL::",data[0].url);
-        htmlBody = htmlBody.replace("::THUMBNAIL_NAME::",data[0].thumbnailName);
         htmlBody = htmlBody.replace("::TITLE::",data[0].title);
-        htmlBody = htmlBody.replace("::FOOTERURL::",data[0].footerurl);
+        htmlBody = htmlBody.replace("::IMG::","http://webzine.kati.net:8088"+data[0].img);
+        htmlBody = htmlBody.replace("::URL::",data[0].url);
+        htmlBody = htmlBody.replace("::PUBLISHDATE::",data[0].publishdate);
     }else if(menuid == "6"){ //KATI, 농수산식품수출기상도
         if(data[0].titledate!=null) htmlBody = htmlBody.replace("::ENDDATE::",data[0].titledate);
         htmlBody = htmlBody.replace("::TOTAMTPER::",Number(data[0].totAmtper).toFixed(1));
@@ -153,19 +153,55 @@ function menuHtmlData(data,menuid, htmlBody){
         htmlBody = htmlBody.replace("::LASTYEARPRICE::",$.number(data[infoArrNum].lastYearlyAveragePrice));
     }else if( menuid=="16" ){//화훼공판장, 경매시세
         if( data.length > 0 ) {
-            htmlBody = htmlBody.replace(/::ITEMCODE1::/g, data[0].itemCode.substring(1, 3));
-            htmlBody = htmlBody.replace(/::ITEMNAME1::/g, data[0].itemName);
-            htmlBody = htmlBody.replace("::PRICE1::", $.number(data[0].avgPrice));
+            if(data[0].itemCode!=null) {
+                htmlBody = htmlBody.replace(/::ITEMCODE1::/g, data[0].itemCode.substring(1, 3));
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMCODE1::/g, "F31".substring(1, 3));   //값이 없을 경우에
+            }
+            if(data[0].itemName!=null) {
+                htmlBody = htmlBody.replace(/::ITEMNAME1::/g, data[0].itemName);
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMNAME1::/g, "-");
+            }
+            if(data[0].avgPrice!=null) {
+                htmlBody = htmlBody.replace("::PRICE1::", $.number(data[0].avgPrice));
+            }else{
+                htmlBody = htmlBody.replace("::PRICE1::", $.number(0));
+            }
         }
         if( data.length > 1 ) {
-            htmlBody = htmlBody.replace(/::ITEMCODE2::/g, data[1].itemCode.substring(1, 3));
-            htmlBody = htmlBody.replace(/::ITEMNAME2::/g, data[1].itemName);
-            htmlBody = htmlBody.replace("::PRICE2::", $.number(data[1].avgPrice));
+            if(data[1].itemCode!=null) {
+                htmlBody = htmlBody.replace(/::ITEMCODE2::/g, data[1].itemCode.substring(1, 3));
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMCODE2::/g, "F32".substring(1, 3));
+            }
+            if(data[1].itemName!=null) {
+                htmlBody = htmlBody.replace(/::ITEMNAME2::/g, data[1].itemName);
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMNAME2::/g, "-");
+            }
+            if(data[1].avgPrice!=null) {
+                htmlBody = htmlBody.replace("::PRICE2::", $.number(data[1].avgPrice));
+            }else{
+                htmlBody = htmlBody.replace("::PRICE2::", $.number(0));
+            }
         }
         if( data.length > 2 ) {
-            htmlBody = htmlBody.replace(/::ITEMCODE3::/g, data[2].itemCode.substring(1, 3));
-            htmlBody = htmlBody.replace(/::ITEMNAME3::/g, data[2].itemName);
-            htmlBody = htmlBody.replace("::PRICE3::", $.number(data[2].avgPrice));
+            if(data[2].itemCode!=null) {
+                htmlBody = htmlBody.replace(/::ITEMCODE3::/g, data[2].itemCode.substring(1, 3));
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMCODE3::/g, "F33".substring(1, 3));
+            }
+            if(data[2].itemName!=null) {
+                htmlBody = htmlBody.replace(/::ITEMNAME3::/g, data[2].itemName);
+            }else{
+                htmlBody = htmlBody.replace(/::ITEMNAME3::/g, "-");
+            }
+            if(data[2].avgPrice!=null) {
+                htmlBody = htmlBody.replace("::PRICE3::", $.number(data[2].avgPrice));
+            }else{
+                htmlBody = htmlBody.replace("::PRICE3::", $.number(0));
+            }
         }
     }
     return htmlBody;

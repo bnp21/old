@@ -62,4 +62,20 @@
             </trim>
             WHERE id=#{id}
     </update>
+
+    <update id="Menu.updateMenuNewLetter" parameterType="Menu">
+        UPDATE MENU SET
+            UPDATEID = #{updateid}
+            ,UPDATEDATE = to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+            , URL = (SELECT URL FROM
+                      (SELECT A.URL
+                        FROM NEWS_LETTER A
+                        WHERE 1=1
+                        AND A.URL IS NOT NULL
+                        ORDER BY A.PK_DATE DESC
+                        )
+                        WHERE ROWNUM=1
+                     )
+            WHERE id=#{id}
+    </update>
 </mapper>

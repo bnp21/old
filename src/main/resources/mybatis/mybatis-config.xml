@@ -33,6 +33,7 @@
         <typeAlias type="com.info.web.domain.ForeignWholesale"      alias="ForeignWholesale"      />
         <typeAlias type="com.info.web.domain.FlowerVolume"      alias="FlowerVolume"      />
         <typeAlias type="com.info.web.domain.ExportWeather"      alias="ExportWeather"      />
+        <typeAlias type="com.info.web.domain.NewsLetter"      alias="NewsLetter"      />
         <typeAlias type="com.info.web.domain.MainIndicators"      alias="MainIndicators"      />
         <typeAlias type="com.info.web.domain.MakeGarden"      alias="MakeGarden"      />
         <typeAlias type="com.info.web.domain.Email"      alias="Email"      />

@@ -219,7 +219,7 @@ public class NoticeAdminController {
                 ArrFileName = fileName.split("\\.");
             }
             //version issue file.transferTo(new File(environment.getProperty("upload.filepath")+"notice/"+ArrFileName[0] + "_" + simDate.format(nowTime)+"."+ArrFileName[1]));
-            System.out.println("파일경로==>"+upload_path+"notice/"+ ArrFileName[0] + "_" + simDate.format(nowTime)+"."+ArrFileName[1]);
+            //System.out.println("파일경로==>"+upload_path+"notice/"+ ArrFileName[0] + "_" + simDate.format(nowTime)+"."+ArrFileName[1]);
 
             file.transferTo(new File(upload_path+"notice/"+ ArrFileName[0] + "_" + simDate.format(nowTime)+"."+ArrFileName[1]));
 
@@ -231,7 +231,7 @@ public class NoticeAdminController {
             fileInfo.setFileNo(fileno);
             fileInfo.setFilemime(fileMime);
 
-            System.out.println("mode==>"+mode);
+            //System.out.println("mode==>"+mode);
 
             if( mode.equals("mody")){
                 int fileUpdateCount = noticeService.updateNoticeFile(fileInfo);

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NewsLetter">
+
+    <!-- 뉴스래터 배치 -->
+    <select id="NewsLetter.selectNewsLetterList" parameterType="NewsLetter" resultType="NewsLetter">
+
+        SELECT
+                A.UTITLE title,
+                A.MTFILE1 img
+        FROM
+        (
+          SELECT
+			A.UCCNO
+			,A.UCCKIND
+			,A.SCCODE
+			,IFNULL(
+			      (SELECT CONCAT(D.UCCMFILEPATH,'/',D.MTFILE1)
+			          FROM
+			              TGUMUCMF D
+			          WHERE
+			              D.UCCNO = A.UCCNO
+			          ORDER BY
+			              D.UCCFNO
+			          LIMIT 0,1),
+			  '') AS MTFILE1
+			,A.UTITLE
+			,A.USTITLE
+			,A.UCONTENT
+			,A.USCONTENT
+			,A.UCCCNT
+			,A.URDATE
+			,A.MBID
+		FROM tgumucmst A
+		WHERE A.SCCODE = 57
+		AND A.VIEWKIND = '1'
+		ORDER BY A.UCCNO DESC
+        ) A
+
+    </select>
+
+</mapper>

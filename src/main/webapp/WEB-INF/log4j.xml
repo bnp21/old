@@ -31,17 +31,17 @@
 	</logger>
 
 	<logger name="jdbc.audit" additivity="false">
-		<level value="warn" />
+		<level value="info" />
 		<appender-ref ref="console" />
 	</logger>
 
 	<logger name="jdbc.resultset" additivity="false">
-		<level value="warn" />
+		<level value="info" />
 		<appender-ref ref="console" />
 	</logger>
 
 	<logger name="jdbc.sqltiming" additivity="false">
-		<level value="warn" />
+		<level value="info" />
 		<appender-ref ref="console" />
 	</logger>
 
@@ -51,7 +51,7 @@
 	</logger>
 
 	<logger name="me.talentea">
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="ASYNC" />
 	</logger>
 

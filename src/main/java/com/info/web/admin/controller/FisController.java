@@ -215,7 +215,7 @@ public class FisController {
 
 
         //version issue environment.getProperty("upload.filepath")+"excel/" + grain.getFile().getOriginalFilename();
-        System.out.println("filePath==>"+filePath);
+        //System.out.println("filePath==>"+filePath);
 
         outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(grain.getFile().getFileItem().get());
@@ -248,7 +248,7 @@ public class FisController {
                     grain.setAveragePrice(row.getCell(5).getStringCellValue());
                     grain.setAverageFluctuation(row.getCell(6).getStringCellValue());
 
-                    System.out.println("check ==> " + fisService.checkGrainMarketCondition(grain));
+                    //System.out.println("check ==> " + fisService.checkGrainMarketCondition(grain));
 
                     if(fisService.checkGrainMarketCondition(grain) > 0){
                         //todo : UPDATE 수행
@@ -358,7 +358,7 @@ public class FisController {
 
         String filePath =  upload_path+"excel/"+irm.getFile().getOriginalFilename();
         //version issue environment.getProperty("upload.filepath")+"excel/" + irm.getFile().getOriginalFilename();
-        System.out.println("filePath==>"+filePath);
+        //System.out.println("filePath==>"+filePath);
 
         outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(irm.getFile().getFileItem().get());
@@ -527,7 +527,7 @@ public class FisController {
         String filePath = upload_path+"excel/"+ processedFood.getFile().getOriginalFilename();
         //version issue environment.getProperty("upload.filepath")+"excel/" + processedFood.getFile().getOriginalFilename();
 
-        System.out.println("filePath==>"+filePath);
+        //System.out.println("filePath==>"+filePath);
 
         outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(processedFood.getFile().getFileItem().get());
@@ -544,7 +544,7 @@ public class FisController {
         while (rowIterator.hasNext())
         {
             Row row = rowIterator.next();
-            System.out.println("row ==> " + row.getRowNum());
+            //System.out.println("row ==> " + row.getRowNum());
 
             if(row.getRowNum() > 2){
 

@@ -26,4 +26,6 @@ public interface MenuService {
 
     /*메뉴 데이터 수정*/
     public int updateMenu(Menu menu);
+    /*메뉴 데이터 수정*/
+    public int updateMenuNewLetter(Menu menu);
 }

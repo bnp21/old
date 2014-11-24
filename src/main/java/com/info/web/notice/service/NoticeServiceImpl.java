@@ -69,11 +69,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         insertCount = noticeDao.insertNotice(notice);
 
-        LOGGER.info("insertCount : " + insertCount);
+        //LOGGER.info("insertCount : " + insertCount);
         if (insertCount > 0) {
-            LOGGER.info("등록 처리");
+        //    LOGGER.info("등록 처리");
         }else {
-            LOGGER.info("등록 오류");
+        //    LOGGER.info("등록 오류");
         }
 
         return insertCount;
@@ -88,11 +88,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         updateCount = noticeDao.updateNotice(notice);
 
-        LOGGER.info("insertCount : " + updateCount);
+        //LOGGER.info("insertCount : " + updateCount);
         if (updateCount > 0) {
-            LOGGER.info("등록처리");
+            //LOGGER.info("등록처리");
         }else {
-            LOGGER.info("등록오류");
+            //LOGGER.info("등록오류");
         }
 
         return updateCount;
@@ -105,11 +105,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         deleteCount = noticeDao.deleteNotice(seq);
 
-        LOGGER.info("deleteCount : " + deleteCount);
+        //LOGGER.info("deleteCount : " + deleteCount);
         if (deleteCount > 0) {
-            LOGGER.info("삭제 처리");
+            //LOGGER.info("삭제 처리");
         }else {
-            LOGGER.info("삭제 오류");
+            //LOGGER.info("삭제 오류");
         }
 
         return deleteCount;
@@ -123,9 +123,9 @@ public class NoticeServiceImpl implements NoticeService {
         fileseq = noticeDao.selectFileSeq();
 
         if (fileseq > 0) {
-            LOGGER.info("파일SEQ 가져오기 성공");
+            //LOGGER.info("파일SEQ 가져오기 성공");
         }else {
-            LOGGER.info("파일SEQ 가져오기 오류");
+            //LOGGER.info("파일SEQ 가져오기 오류");
         }
 
         return fileseq;
@@ -139,9 +139,9 @@ public class NoticeServiceImpl implements NoticeService {
         fileseq = noticeDao.selectFileNo(seq);
 
         if (fileseq > 0) {
-            LOGGER.info("파일SEQ 가져오기 성공");
+            //LOGGER.info("파일SEQ 가져오기 성공");
         }else {
-            LOGGER.info("파일SEQ 가져오기 오류");
+            //LOGGER.info("파일SEQ 가져오기 오류");
         }
 
         return fileseq;
@@ -168,9 +168,9 @@ public class NoticeServiceImpl implements NoticeService {
         insertCount = noticeDao.insertNoticeFile(fileInfo);
 
         if (insertCount > 0) {
-            LOGGER.info("등록 처리");
+            //LOGGER.info("등록 처리");
         }else {
-            LOGGER.info("등록 오류");
+            //LOGGER.info("등록 오류");
         }
 
         return insertCount;
@@ -185,9 +185,9 @@ public class NoticeServiceImpl implements NoticeService {
         updateCount = noticeDao.updateNoticeFile(fileInfo);
 
         if (updateCount > 0) {
-            LOGGER.info("수정 처리");
+            //LOGGER.info("수정 처리");
         }else {
-            LOGGER.info("수정 오류");
+            //LOGGER.info("수정 오류");
         }
 
         return updateCount;
@@ -200,11 +200,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         deleteCount = noticeDao.deleteNoticeFile(fileInfo);
 
-        LOGGER.info("deleteCount : " + deleteCount);
+        //LOGGER.info("deleteCount : " + deleteCount);
         if (deleteCount > 0) {
-            LOGGER.info("삭제 처리");
+            //LOGGER.info("삭제 처리");
         }else {
-            LOGGER.info("삭제 오류");
+            //LOGGER.info("삭제 오류");
         }
 
         return deleteCount;

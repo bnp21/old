@@ -2,8 +2,8 @@ var menuHtmlImg = "<img src='::MENUIMG::' width='100%' alt='::MENUNAME::'>";
 //뉴스레터
 var menuHtml01 = "<div class='main_01' onclick=\"outLinkAction('::URL::','5');\" style='cursor:pointer;'>"+
     "<div class='contents'>"+
-    "<div class='m_title'> <span class='title'>Newsletter</span> <span class='day'>::FOOTERURL::</span> </div>"+
-    "<div class='m_img'> <img src='::THUMBNAIL_NAME::' width='100%' alt='뉴스레터 메인사진'> </div>"+
+    "<div class='m_title'> <span class='title'>Newsletter</span> <span class='day'>::PUBLISHDATE::</span> </div>"+
+    "<div class='m_img'> <img src='::IMG::' width='100%' alt='뉴스레터 메인사진'> </div>"+
     "<div class='m_footer'>::TITLE::</div>"+
     "</div>"+
     "<div class='m_bg'> <img src='/resources/front/img/main/main_list_01_bg.gif' width='100%' alt=''> </div>"+

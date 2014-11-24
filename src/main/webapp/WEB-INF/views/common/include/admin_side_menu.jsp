@@ -29,7 +29,7 @@
             authId5 = (String) account.getAuthority5();
         }
 
-        System.out.println("authId==>"+authId);
+//        System.out.println("authId==>"+authId);
 //        System.out.println("authId2==>"+authId2);
 //        System.out.println("authId3==>"+authId3);
 //        System.out.println("authId4==>"+authId4);
@@ -287,13 +287,16 @@
                 <ul>
 
                     <% if( authId.equals("A1") || authId2.equals("A1")  || authId3.equals("A1") || authId4.equals("A1") || authId5.equals("A1") ) { %> <!-- 시스템관리자 일경우만 -->
-                    <li><a href="/admin/statistics"><span class="title">메인화면 조회수</span></a></li>
+                    <li><a href="/admin/statistics">메인화면 조회수</a></li>
                     <% } %>
                     <% if( authId.equals("A1") || authId2.equals("A1")  || authId3.equals("A1") || authId4.equals("A1") || authId5.equals("A1") ) { %> <!-- 시스템관리자 일경우만 -->
-                    <li><a href="/admin/statistics2"><span class="title">생생정보 조회수</span></a></li>
+                    <li><a href="/admin/statistics2">생생정보 조회수</a></li>
                     <% } %>
                     <% if( authId.equals("A1") || authId2.equals("A1")  || authId3.equals("A1") || authId4.equals("A1") || authId5.equals("A1") ) { %> <!-- 시스템관리자 일경우만 -->
-                    <li><a href="/admin/statistics3"><span class="title">원본 조회수</span></a></li>
+                    <li><a href="/admin/statistics3">원본 조회수</a></li>
+                    <% } %>
+                    <% if( authId.equals("A1") || authId2.equals("A1")  || authId3.equals("A1") || authId4.equals("A1") || authId5.equals("A1") ) { %> <!-- 시스템관리자 일경우만 -->
+                        <li><a href="/admin/statistics4">데이터 다운로드</a></li>
                     <% } %>
 
                     <!--
@@ -303,6 +306,7 @@
                     -->
                 </ul><!--end /submenu -->
             </li><!--end /menu-item -->
+
         </ul><!--end .main-menu -->
         <!-- END MAIN MENU -->
 

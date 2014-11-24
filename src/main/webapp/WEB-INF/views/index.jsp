@@ -21,7 +21,7 @@
                                     <li class="sub_con_li con0${listCnt}" id="dev_menu${mainList.menuId}">
                                         <c:if test="${mainList.autodataYn=='N'}">
                                             <a href="#" <c:if test="${mainList.outlinkYn!='Y'}"> onclick="javascript:linkAction('${mainList.url}');" </c:if> <c:if test="${mainList.outlinkYn=='Y'}"> onclick="javascript:outLinkAction('${mainList.url}','${mainList.menuId}');" </c:if> >
-                                                <img src='/resources/front/upload/${mainList.thumbnailName}' width='100%' alt='${mainList.menuname}'>
+                                                <img src='/resources/front/upload/${mainList.thumbnailName}' width='100%' height="268px" alt='${mainList.menuname}'>
                                             </a>
                                         </c:if>
                                     </li>

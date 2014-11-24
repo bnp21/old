@@ -61,8 +61,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider, Initi
     }
 
     private void login(String email, String password) {
-        LOGGER.info("Login Email    : {}", email   );
-        LOGGER.info("Login Password : {}", password);
+        //LOGGER.info("Login Email    : {}", email   );
+        //LOGGER.info("Login Password : {}", password);
 
         try {
             authenticationService.login(email, password);

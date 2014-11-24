@@ -38,4 +38,6 @@ public interface BatchService {
 
     public void getBatchData006();
 
+    public void getBatchData007();
+
 }

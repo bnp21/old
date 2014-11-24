@@ -38,7 +38,7 @@
                         <table>
                             <tr>
                                 <th class="form_title"><label for="title">제목</label></th>
-                                <td class="form_main"><input id="title" name="title" type="text" maxlength="20"></td>
+                                <td class="form_main"><input id="title" name="title" type="text" maxlength="50"></td>
                             </tr>
                             <tr>
                                 <th class="form_title"><label for="memo">주요건의사항 및<br>창조적아이디어</label></th>
@@ -118,6 +118,11 @@
             }
             if( $("#email").val() == "" ){
                 alert("E-mail을 입력해주세요.");
+                $("#email").focus();
+                return false;
+            }
+            if( $("#email").val().indexOf("@") < 0 ){
+                alert("E-mail 형식이 틀립니다.");
                 $("#email").focus();
                 return false;
             }

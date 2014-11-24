@@ -148,17 +148,17 @@
         A.SEQ               seq
         ,A.PK_MONTH         pkMonth
         ,A.PK_WEEK          pkWeek
-        ,ceil(A.CUR_AMT1/100000)         curAmt1       /* 오라클에 올림이 없어 ceil을 이용함 */
-        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-1),'MM') curAmtDate1
-        ,ceil(A.CUR_AMT2/100000)         curAmt2
-        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-2),'MM') curAmtDate2
-        ,ceil(A.CUR_AMT3/100000)        curAmt3
-        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{startdate},'YY.MM.DD'),-3),'YY MM') curAmtDate3
+        ,ROUND(A.CUR_AMT1/1000000,1)         curAmt1       /* 오라클에 올림이 없어 ceil을 이용함 */
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{enddate},'YY.MM.DD'),-1),'MM') curAmtDate1
+        ,ROUND(A.CUR_AMT2/1000000,1)         curAmt2
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{enddate},'YY.MM.DD'),-2),'MM') curAmtDate2
+        ,ROUND(A.CUR_AMT3/1000000,1)        curAmt3
+        ,TO_CHAR(ADD_MONTHS(TO_DATE(#{enddate},'YY.MM.DD'),-3),'YY.MM') curAmtDate3
         ,A.ITEM_CODE        itemCode
         ,A.ITEM_NAME        itemName
         ,A.CREATEID         createid
         ,A.CREATEDATE       createdate
-        ,(CASE WHEN (NVL(CUR_AMT1,0) >= NVL(CUR_AMT2,0) AND NVL(CUR_AMT1,0) >= NVL(CUR_AMT3,0)) THEN NVL(ceil(A.CUR_AMT1/100000),0) WHEN (NVL(CUR_AMT2,0) >= NVL(CUR_AMT1,0) AND NVL(CUR_AMT2,0) >= NVL(CUR_AMT3,0)) THEN NVL(ceil(A.CUR_AMT2/100000),0) ELSE NVL(ceil(A.CUR_AMT3/100000),0) END ) maxCurAmt
+        ,(CASE WHEN (NVL(CUR_AMT1,0) >= NVL(CUR_AMT2,0) AND NVL(CUR_AMT1,0) >= NVL(CUR_AMT3,0)) THEN NVL(ROUND(A.CUR_AMT1/1000000,1),0) WHEN (NVL(CUR_AMT2,0) >= NVL(CUR_AMT1,0) AND NVL(CUR_AMT2,0) >= NVL(CUR_AMT3,0)) THEN NVL(ROUND(A.CUR_AMT2/1000000,1),0) ELSE NVL(ROUND(A.CUR_AMT3/1000000,1),0) END ) maxCurAmt
         FROM EXPORT_WEATHER_MONTH A
         WHERE 1=1
         AND A.ITEM_CODE IN ('SUB02','SUB12','SUB20')
@@ -214,6 +214,7 @@
             SELECT
                 A.PK_YEAR, A.PK_MONTH, A.PK_WEEK
             FROM EXPORT_WEATHER A
+            WHERE VIEW_YN ='Y'
             GROUP BY A.PK_YEAR,A.PK_MONTH, A.PK_WEEK
             ORDER BY A.PK_YEAR DESC, A.PK_MONTH DESC, A.PK_WEEK DESC
         ) B
@@ -260,4 +261,33 @@
         SET UP_ITEM=#{upItem}, DOWN_ITEM=#{downItem}, MEMO1=#{memo1}, MEMO2=#{memo2}
         WHERE PK_YEAR = #{pkYear} AND PK_MONTH = #{pkMonth} AND PK_WEEK = #{pkWeek} AND TRIM(ITEM_NAME) = TRIM(#{itemName})
     </update>
+
+    <select id="ExportWeather.selectNewsLetterList" parameterType="NewsLetter" resultType="NewsLetter">
+
+        SELECT
+             A.PK_DATE               pkDate
+            ,A.TITLE                 title
+            ,A.IMG                   img
+            ,A.URL                   url
+            ,A.PUBLISHDATE           publishdate
+            ,A.CREATEDATE            createdate
+            ,DECODE(A.URL,NULL,'N','Y')           viewYn
+        FROM NEWS_LETTER A
+        WHERE 1=1
+        <if test="pkDate != null">
+            AND A.PK_DATE = #{pkDate}
+        </if>
+        <if test="viewYn != null">
+            AND A.URL IS NOT NULL
+        </if>
+        ORDER BY A.PK_DATE DESC
+
+    </select>
+
+    <update id="ExportWeather.updateNewsLetter" parameterType="NewsLetter">
+        UPDATE NEWS_LETTER
+        SET URL=#{url}, PUBLISHDATE=#{publishdate}, UPDATEID=#{updateid}, UPDATEDATE=to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS')
+        WHERE PK_DATE = #{pkDate}
+    </update>
+
 </mapper>

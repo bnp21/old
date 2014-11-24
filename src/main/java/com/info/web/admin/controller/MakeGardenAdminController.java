@@ -70,7 +70,7 @@ public class MakeGardenAdminController {
 
         model.addAttribute("makeGardenList", makeGardenList);
 
-        System.out.println("excelYn==>"+makeGarden.getExcelYn());
+        //System.out.println("excelYn==>"+makeGarden.getExcelYn());
 
         if(makeGarden.getExcelYn().equals("Y")){    //엑셀일 경우
             return "admin/makegarden/excel";
@@ -104,6 +104,12 @@ public class MakeGardenAdminController {
         if( mode.equals("mody") ) {
             makeGarden.setSeq(seq);
             makeGardenView = makeGardenService.selectMakeGardenView(makeGarden);
+
+            //html 엔터,공백을 <br>, &nbsp;로 바꾸는 메서드
+            String htmlValue=Email.convEnt2Br(makeGardenView.getMemo());
+            //System.out.println("htmlValue==>"+htmlValue);
+            makeGardenView.setMemo(htmlValue);
+
             model.addAttribute("makeGardenView", makeGardenView);
         }
         return "admin/makegarden/write";
@@ -134,24 +140,24 @@ public class MakeGardenAdminController {
 
         /** 메일보내기 추가해야함 - 2014년11월04일 **/
         if(cnt>0) {
-            System.out.println("어드민 메일보내기 시작");
-            System.out.println("email==>"+makeGarden.getEmail());
+            //System.out.println("어드민 메일보내기 시작");
+            //System.out.println("email==>"+makeGarden.getEmail());
             Email email= new Email();
             email.setTitle(makeGarden.getTitle());
-            email.setMemo(makeGarden.getMemo());
+            email.setMemo(Email.convEnt2Br(makeGarden.getMemo()));
             email.setName(makeGarden.getName());
             email.setPhone(makeGarden.getPhone());
             email.setEmail(makeGarden.getEmail());
             email.setAddr(makeGarden.getAddr());
             email.setCreatedate(makeGarden.getCreatedate());
-            email.setReplyMemo(makeGarden.getReplyMemo());
+            email.setReplyMemo(Email.convEnt2Br(makeGarden.getReplyMemo()));
             email.setReplyDept(makeGarden.getReplyDept());
             email.setReplyPhone(makeGarden.getReplyPhone());
             email.setReplyName(makeGarden.getReplyName());
             email.setReplyEmail(makeGarden.getReplyEmail());
 
             makeGardenService.sendAdminMail(email, request);
-            System.out.println("어드민 메일보내기 끝");
+            //System.out.println("어드민 메일보내기 끝");
         }
 
         return "redirect:/admin/makegarden/";

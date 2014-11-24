@@ -24,10 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -66,7 +63,43 @@ public class AccountController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET )
-    public String login(Model model,RedirectAttributes redirectAttributes) {
+    public String login(Model model,RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
+
+        /************** 내부아이피일경우만 어드민에 접속하도록 함 Start **************/
+
+        String ip = request.getRemoteAddr();
+        //System.out.println("어드민 ip==>"+ip);
+        if(ip != null){
+            //공사공인아이피[210.103.25.*], 공사내부아이피[192.168.*.*], [135.22.*.*], 서울대학교[147.47.204.83]
+            if(ip.indexOf("210.103.25.") > -1 || ip.indexOf("192.168.") > -1 || ip.indexOf("135.22.") > -1 || ip.indexOf("147.47.204.83") > -1 ){
+
+            //개발자 egg wifi 아이피[125.152.240.195], 운영pc 아이피[210.103.25.169] - 개발자 편리를 위해 추가함-차후 주석처리
+            }else if(ip.indexOf("125.152.") > -1 || ip.indexOf("175.253.") > -1 || ip.indexOf("0:0:0:0:0:0:0:1") > -1 ){    //개발서버ip이걸로 찍힘[0:0:0:0:0:0:0:1]
+
+                //허용된 아이피가 아니면 메인홈으로 보냄
+            }else{
+                //arlert창 메세지 추가함
+                //setContentType을 프로젝트 환경에 맞추어 변경
+                response.setContentType("application/x-msdownload");
+                PrintWriter printwriter = null;
+                try {
+                    printwriter = response.getWriter();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                printwriter.println("<script language='javascript'>alert('관리자 화면에 허용된 접속아이피가 아닙니다.');</script>");
+                printwriter.println("<form id='frm' name='frm' method='get' action='/'>");
+                printwriter.println("<script language='javascript'>frm.submit();</script>");
+
+                printwriter.flush();
+                printwriter.close();
+
+                return "";
+            }
+
+        }
+        /************** 내부아이피일경우만 어드민에 접속하도록 함 End **************/
 
         return "account/login";
     }
@@ -102,8 +135,8 @@ public class AccountController {
         String id = account.getEmail();
         String pwd = account.getPassword();
 
-        System.out.println("로그인 ip==>"+ip);
-        System.out.println("id==>"+id);
+        //System.out.println("로그인 ip==>"+ip);
+        //System.out.println("id==>"+id);
 
         String msg ="";
 

@@ -2,6 +2,7 @@ package com.info.web.exportweather.dao;
 
 
 import com.info.web.domain.ExportWeather;
+import com.info.web.domain.NewsLetter;
 
 import java.util.List;
 
@@ -71,4 +72,15 @@ public interface ExportWeatherDao {
      * @return 농수산식품 수출기상도 국가별 이슈 수정
      */
     public int updateExportWeatherNation(ExportWeather exportWeather);
+
+    /**
+     * 뉴스레터 리스트
+     * @param newsLetter
+     * @return 뉴스레터 리스트
+     */
+    public List<NewsLetter> selectNewsLetterList(NewsLetter newsLetter);
+
+    /*뉴스레터 수정*/
+    public int updateNewsLetter(NewsLetter newsLetter);
+
 }

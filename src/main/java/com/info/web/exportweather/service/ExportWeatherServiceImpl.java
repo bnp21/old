@@ -1,6 +1,7 @@
 package com.info.web.exportweather.service;
 
 import com.info.web.domain.ExportWeather;
+import com.info.web.domain.NewsLetter;
 import com.info.web.exportweather.dao.ExportWeatherDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,5 +74,14 @@ public class ExportWeatherServiceImpl implements ExportWeatherService {
 
     public int updateExportWeatherNation(ExportWeather exportWeather) {
         return exportWeatherDao.updateExportWeatherNation(exportWeather);
+    }
+
+    public List<NewsLetter> selectNewsLetterList(NewsLetter newsLetter) {
+        return exportWeatherDao.selectNewsLetterList(newsLetter);
+    }
+
+
+    public int updateNewsLetter(NewsLetter newsLetter) {
+        return exportWeatherDao.updateNewsLetter(newsLetter);
     }
 }

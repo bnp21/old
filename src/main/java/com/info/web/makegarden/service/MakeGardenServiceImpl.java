@@ -90,11 +90,11 @@ public class MakeGardenServiceImpl implements MakeGardenService {
 
         StringBuffer emailReceiversBuf = new StringBuffer();
 
-        System.out.println("list.size()==>" + list.size());
+        //System.out.println("list.size()==>" + list.size());
 
         for (int i = 0; i < list.size(); i++) {
             String str = list.get(i).getReceiverEmail();
-            System.out.println("str==>"+str);
+            //System.out.println("str==>"+str);
             if (str == null || str.equals("")) {
                 continue;
             }
@@ -102,8 +102,8 @@ public class MakeGardenServiceImpl implements MakeGardenService {
             emailReceiverCnt++;
         }
 
-        System.out.println("emailReceiversBuf.toString=" + emailReceiversBuf.toString());
-        System.out.println("emailReceiverCnt=" + emailReceiverCnt);
+        //System.out.println("emailReceiversBuf.toString=" + emailReceiversBuf.toString());
+        //System.out.println("emailReceiverCnt=" + emailReceiverCnt);
 
         if (emailReceiverCnt == 0)
             return 0;
@@ -125,9 +125,9 @@ public class MakeGardenServiceImpl implements MakeGardenService {
 
             Email emailVo=new Email();
             String html=emailVo.getHtml(email,request);
-            System.out.println("######## html start #############");
-            System.out.println(html);
-            System.out.println("######## html end #############");
+            //System.out.println("######## html start #############");
+            //System.out.println(html);
+            //System.out.println("######## html end #############");
 
             email.setContent(html);
 
@@ -170,7 +170,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
             writer.flush();
             writer.close();
 
-            System.out.println("m_parameterString==>" + m_ParameterString.toString());
+            //System.out.println("m_parameterString==>" + m_ParameterString.toString());
 
             writer = null;
             ResultBuffer = new BufferedReader(new InputStreamReader(Con.getInputStream(), "KSC5601"));
@@ -194,12 +194,12 @@ public class MakeGardenServiceImpl implements MakeGardenService {
         } catch (MalformedURLException me) {
 //            logger.fatal(me);
 //            throw me;
-            System.out.println("이메일 MalformedURLException 에러");
+            //System.out.println("이메일 MalformedURLException 에러");
 
         } catch (IOException ioe) {
 //            logger.fatal(ioe);
 //            throw ioe;
-            System.out.println("이메일 IOException 에러");
+            //System.out.println("이메일 IOException 에러");
         } finally {
             try {
                 if (writer != null) {
@@ -207,7 +207,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
                 //logger.fatal(e);
-                System.out.println("이메일 에러 1");
+                //System.out.println("이메일 에러 1");
             }
             try {
                 if (ResultBuffer != null) {
@@ -215,7 +215,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
 //                logger.fatal(e);
-                System.out.println("이메일 에러 2");
+                //System.out.println("이메일 에러 2");
             }
             try {
                 if (Con != null) {
@@ -223,7 +223,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
                 //logger.fatal(e);
-                System.out.println("이메일 에러 3");
+                //System.out.println("이메일 에러 3");
             }
         }
 
@@ -270,11 +270,11 @@ public class MakeGardenServiceImpl implements MakeGardenService {
 
         StringBuffer emailReceiversBuf = new StringBuffer();
 
-        System.out.println("list.size()==>" + list.size());
+        //System.out.println("list.size()==>" + list.size());
 
         for (int i = 0; i < list.size(); i++) {
             String str = list.get(i).getReceiverEmail();
-            System.out.println("str==>"+str);
+            //System.out.println("str==>"+str);
             if (str == null || str.equals("")) {
                 continue;
             }
@@ -282,8 +282,8 @@ public class MakeGardenServiceImpl implements MakeGardenService {
             emailReceiverCnt++;
         }
 
-        System.out.println("emailReceiversBuf.toString=" + emailReceiversBuf.toString());
-        System.out.println("emailReceiverCnt=" + emailReceiverCnt);
+        //System.out.println("emailReceiversBuf.toString=" + emailReceiversBuf.toString());
+        //System.out.println("emailReceiverCnt=" + emailReceiverCnt);
 
         if (emailReceiverCnt == 0)
             return 0;
@@ -305,9 +305,9 @@ public class MakeGardenServiceImpl implements MakeGardenService {
 
         Email emailVo=new Email();
         String html=emailVo.getAdminHtml(email,request);
-        System.out.println("######## AdminHtml start #############");
-        System.out.println(html);
-        System.out.println("######## AdminHtml end #############");
+        //System.out.println("######## AdminHtml start #############");
+        //System.out.println(html);
+        //System.out.println("######## AdminHtml end #############");
 
         email.setContent(html);
 
@@ -350,7 +350,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
             writer.flush();
             writer.close();
 
-            System.out.println("m_parameterString==>" + m_ParameterString.toString());
+            //System.out.println("m_parameterString==>" + m_ParameterString.toString());
 
             writer = null;
             ResultBuffer = new BufferedReader(new InputStreamReader(Con.getInputStream(), "KSC5601"));
@@ -374,12 +374,12 @@ public class MakeGardenServiceImpl implements MakeGardenService {
         } catch (MalformedURLException me) {
 //            logger.fatal(me);
 //            throw me;
-            System.out.println("이메일 MalformedURLException 에러");
+            //System.out.println("이메일 MalformedURLException 에러");
 
         } catch (IOException ioe) {
 //            logger.fatal(ioe);
 //            throw ioe;
-            System.out.println("이메일 IOException 에러");
+            //System.out.println("이메일 IOException 에러");
         } finally {
             try {
                 if (writer != null) {
@@ -387,7 +387,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
                 //logger.fatal(e);
-                System.out.println("이메일 에러 1");
+                //System.out.println("이메일 에러 1");
             }
             try {
                 if (ResultBuffer != null) {
@@ -395,7 +395,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
 //                logger.fatal(e);
-                System.out.println("이메일 에러 2");
+                //System.out.println("이메일 에러 2");
             }
             try {
                 if (Con != null) {
@@ -403,7 +403,7 @@ public class MakeGardenServiceImpl implements MakeGardenService {
                 }
             } catch (Exception e) {
                 //logger.fatal(e);
-                System.out.println("이메일 에러 3");
+                //System.out.println("이메일 에러 3");
             }
         }
 

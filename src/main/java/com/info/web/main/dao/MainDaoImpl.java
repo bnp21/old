@@ -43,6 +43,20 @@ public class MainDaoImpl implements MainDao {
         return sqlSessionTemplate.selectList("Main.selectStatisticsList",statistics);
     }
 
+    public List<Statistics> selectStatisticsDateDownloadList(Statistics statistics) {
+        return sqlSessionTemplate.selectList("Main.selectStatisticsDateDownloadList",statistics);
+    }
+
+    public List<Statistics> selectStatisticsMenuList(Statistics statistics) {
+
+        return sqlSessionTemplate.selectList("Main.selectStatisticsMenuList", statistics);
+    }
+
+    public List<Statistics> selectStatisticsDateList(Statistics statistics) {
+
+        return sqlSessionTemplate.selectList("Main.selectStatisticsDateList",statistics);
+    }
+
     public int updateStatistics(Statistics statistics) {
         return sqlSessionTemplate.update("Main.updateStatistics", statistics);
     }
